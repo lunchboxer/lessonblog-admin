@@ -16,7 +16,7 @@
 </style>
 
 <script>
- 
+
   import client from '../utils/feathers'
   import store from '../utils/store'
   export default {
@@ -25,7 +25,7 @@
     },
     store: () => store,
     oncreate() {
-      client.service("groups").find().then(res => this.store.set({ groups: res.data }))
+      client.service("groups").find({ query: { $sort: { name: 1 } } }).then(res => this.store.set({ groups: res.data }))
       client
         .authenticate()
         .catch(error => this.store.set({ login: null, user: null }));

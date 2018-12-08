@@ -1,0 +1,73 @@
+<div class="form-container">
+  <h2>{$_('admin.addGroup')}</h2>
+
+  <form novalidate ref:form on:submit="handleSubmit(event)">
+    <fieldset>
+      <label for="nameField">{$_('admin.className')}</label>
+      <input id="nameField" type="text" bind:value=name />
+
+      <br>
+      <input type="submit" value="{$_('save')}" class="button" ref:submit />
+      <input type="reset" value="{$_('cancel')}" class="button button-outline" />
+      {#if error}
+      <br>
+      <span class="error">{error}</span>
+      {/if}
+    </fieldset>
+  </form>
+</div>
+
+<style>
+  .error {
+    color: red;
+  }
+
+  .form-container {
+    padding: 2rem;
+    border: 1px solid #eeeeee;
+  }
+
+  form,
+  fieldset {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers.js'
+  import { goto } from "../../__sapper__/client.js";
+
+  export default {
+    data() {
+      return {
+        name: '',
+        error: ''
+      }
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.preventDefault()
+        const isValid = this.refs.form.checkValidity()
+        if (!isValid) return
+        this.refs.submit.disabled = true
+        const { name } = this.get()
+        const { groups } = this.store.get()
+        client
+          .service("groups")
+          .create({ name })
+          .then(group => {
+            this.set({ error: '', name: '' })
+            this.refs && (this.refs.submit.disabled = false)
+            this.store.set({ groups: [...groups, group] })
+            goto('/')
+          })
+          .catch(error => {
+            this.refs && (this.refs.submit.disabled = false)
+            this.set({ error: error.message })
+          })
+      }
+    }
+  }
+</script>

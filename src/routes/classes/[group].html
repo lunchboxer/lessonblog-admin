@@ -2,28 +2,28 @@
   <title>{$_('appName')}: {$_('lessonList.title', {groupName})}</title>
 </svelte:head>
 
-<h1>{$_('lessonList.title', {groupName})}</h1>
+<h2>{$_('lessonList.title', {groupName})}</h2>
 
 <div class="content">
-  {#if group} 
+  {#if group}
 
-    <LessonsLoader {group} />
-    {#if !$lessons}
-      <p>{$_('loading', [$_('lessons')])}</p>
-    {:elseif $lessons.total === 0}
-      <p>{$_('lessonList.none')}</p>
-    {:else}
-      {#if $lessons.data[0].group === group._id}
-      {#each $lessons.data as lesson (lesson._id)}
-        <LessonSummary lesson="{lesson}" showMaterials="{false}" />
-      {/each} 
-      {/if}   
-    {/if}
+  <LessonsLoader {group} />
+  {#if !$lessons}
+  <p>{$_('loading', [$_('lessons')])}</p>
+  {:elseif $lessons.total === 0}
+  <p>{$_('lessonList.none')}</p>
+  {:else}
+  {#if $lessons.data[0].group === group._id}
+  {#each $lessons.data as lesson (lesson._id)}
+  <LessonSummary lesson="{lesson}" showMaterials="{false}" />
+  {/each}
+  {/if}
+  {/if}
 
   {:elseif $groups.length}
-    <p>{$_('classNotFound')}</p>
+  <p>{$_('classNotFound')}</p>
   {/if}
- 
+
 </div>
 
 <script>

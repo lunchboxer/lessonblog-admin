@@ -33,7 +33,17 @@ export const zhCn = {
   },
   admin: {
     title: '管理{appName}',
-    newLesson: '记录课程内容'
+    newLesson: '记录课程内容',
+    newMaterial: '加材料',
+    addGroup: '加班级',
+    newUser: '加用户',
+    className: 'Class name'
+  },
+  material: {
+    uri: '网址',
+    title: '标题',
+    type: 'file-type',
+    notes: 'notes'
   },
   className: '{name}班',
   welcome: '{appName}欢迎您',
@@ -61,10 +71,10 @@ export const zhCn = {
     summaryZH: '课程内容（中文）',
     translateHeading: '翻译{groupName}班第{number}节课内容',
     editHeading: '编辑{groupName}班第{number}节课内容',
-    edit: '编辑',
-    delete: '删除',
-    deleteConfirm: '确认要删除'
+    edit: '编辑'
   },
   showMaterials: '加载材料',
-  username: '用户名'
+  username: '用户名',
+  delete: '删除',
+  deleteConfirm: '确认要删除'
 }

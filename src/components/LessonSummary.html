@@ -1,6 +1,6 @@
 <div class="lesson-summary">
   <a href="/lessons/{lesson._id}">
-    <h2>{$_('summary.heading', {number: lesson.number})} - {date}</h2>
+    <h3>{$_('summary.heading', {number: lesson.number})} - {date}</h3>
   </a>
   {#if $user}
   <a class="button button-outline" href="/edit-lesson/{lesson._id}">{$_('summary.edit')}</a>
@@ -37,7 +37,7 @@
 <style>
   .lesson-summary {
     margin: 2rem 0;
-    padding: 2rem;
+    padding: 1rem;
     border: 1px solid #dddddd;
     border-radius: 1rem;
   }

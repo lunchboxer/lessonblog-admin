@@ -1,0 +1,83 @@
+<div class="form-container">
+  <h2>{$_('admin.newMaterial')}</h2>
+
+  <form novalidate ref:form on:submit="handleSubmit(event)">
+    <fieldset>
+      <label for="uriField">{$_('material.uri')}</label>
+      <input id="uriField" type="text" bind:value=uri />
+
+      <label for="titleField">{$_('material.title')}</label>
+      <input id="titleField" type="text" bind:value=title />
+
+      <label for="typeField">{$_('material.type')}</label>
+      <input id="typeField" type="text" bind:value=type />
+
+      <label for="notesField">{$_('material.notes')}</label>
+      <input id="notesField" type="text" bind:value=notes />
+
+      <br>
+      <input type="submit" value="{$_('save')}" class="button" ref:submit />
+      <input type="reset" value="{$_('cancel')}" class="button button-outline" />
+      {#if error}
+      <br>
+      <span class="error">{error}</span>
+      {/if}
+    </fieldset>
+  </form>
+</div>
+
+<style>
+  .error {
+    color: red;
+  }
+
+  .form-container {
+    padding: 2rem;
+    border: 1px solid #eeeeee;
+  }
+
+  form,
+  fieldset {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers.js'
+  import { goto } from "../../__sapper__/client.js";
+
+  export default {
+    data() {
+      return {
+        uri: '',
+        title: '',
+        type: '',
+        notes: '',
+        error: ''
+      }
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.preventDefault()
+        const isValid = this.refs.form.checkValidity()
+        if (!isValid) return
+        this.refs.submit.disabled = true
+        const { uri, title, type, notes } = this.get()
+        client
+          .service("materials")
+          .create({ uri, title, type, notes })
+          .then(() => {
+            this.set({ error: '', uri: '', title: '', type: '', notes: '' })
+            this.refs && (this.refs.submit.disabled = false)
+            goto('/admin')
+          })
+          .catch(error => {
+            this.refs && (this.refs.submit.disabled = false)
+            this.set({ error: error.message })
+          })
+      }
+    }
+  }
+</script>

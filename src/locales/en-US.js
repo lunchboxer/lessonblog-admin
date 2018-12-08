@@ -35,7 +35,17 @@ export const enUs = {
   },
   admin: {
     title: '{appName} admin',
-    newLesson: 'New lesson summary'
+    newLesson: 'New lesson summary',
+    newMaterial: 'New material',
+    addGroup: 'Add a group',
+    newUser: 'Create a user',
+    className: 'Class name'
+  },
+  material: {
+    uri: 'URI',
+    title: 'Title',
+    type: 'File type',
+    notes: 'Notes'
   },
   className: '{name} class',
   welcome: 'Welcome to {appName}',
@@ -64,10 +74,10 @@ export const enUs = {
     summaryZH: 'Lesson summary (Chinese)',
     translateHeading: 'Translate {groupName} class lesson {number}',
     editHeading: 'Edit {groupName} class lesson {number}',
-    edit: 'Edit',
-    delete: 'Delete',
-    deleteConfirm: 'Confirm deletion'
+    edit: 'Edit'
   },
   showMaterials: 'Show materials',
-  username: 'username'
+  username: 'username',
+  delete: 'Delete',
+  deleteConfirm: 'Confirm delete'
 }

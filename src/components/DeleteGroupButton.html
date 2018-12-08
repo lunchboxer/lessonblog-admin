@@ -1,0 +1,34 @@
+<div>
+  {#if !confirm}
+  <button class="button-clear" on:click="set({confirm:true})">{$_('delete')}</button>
+  {:else}
+  <button class="button-outline" on:click="set({confirm:false})">{$_('cancel')}</button>
+  <button class="button-clear" on:click="handleDelete(group)">{$_('deleteConfirm')}</button>
+  {/if}
+</div>
+
+<style>
+  div {
+    margin-left: 1rem;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers.js'
+  export default {
+    data() {
+      return {
+        confirm: false
+      }
+    },
+    methods: {
+      handleDelete(group) {
+        const { groups } = this.store.get()
+        client.service("groups").remove(group).then(deleted => {
+          const newGroups = groups.filter(g => g._id !== group)
+          this.store.set({ groups: newGroups })
+        })
+      }
+    }
+  }
+</script>

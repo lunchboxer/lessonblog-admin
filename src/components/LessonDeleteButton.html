@@ -1,10 +1,10 @@
 {#if confirm}
 <button class="button-outline" on:click="handleDelete(lesson._id)">
-  {$_('summary.deleteConfirm')}
+  {$_('deleteConfirm')}
 </button>
 {:else}
 <button class="button-outline" on:click="set({confirm:true})">
-  {$_('summary.delete')}
+  {$_('delete')}
 </button>
 {/if}
 

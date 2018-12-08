@@ -6,10 +6,28 @@
 
 <RequireAuth>
   <!-- Just have all these on one page seperate components forms with submit buttons -->
+  {#if showLessonSummaryForm}
   <LessonSummaryForm />
-  <button>New material</button>
-  <button>Add a group</button>
-  <button>create new user</button>
+  {:else}
+  <button on:click="set({showLessonSummaryForm:true})">{$_('admin.newLesson')}</button>
+  {/if}
+
+  <br>
+  {#if showNewMaterialForm}
+  <AddMaterialForm />
+  {:else}
+  <button on:click="set({showNewMaterialForm:true})">{$_('admin.newMaterial')}</button>
+  {/if}
+
+  <br>
+  {#if showAddGroupForm}
+  <AddGroupForm />
+  {:else}
+  <button on:click="set({showAddGroupForm: true})">{$_('admin.addGroup')}</button>
+  {/if}
+
+  <br>
+  <button>{$_('admin.newUser')}</button>
 
 </RequireAuth>
 
@@ -17,7 +35,17 @@
   export default {
     components: {
       RequireAuth: "../components/RequireAuth.html",
-      LessonSummaryForm: "../components/LessonSummaryForm.html"
+      LessonSummaryForm: "../components/LessonSummaryForm.html",
+      AddMaterialForm: "../components/AddMaterialForm.html",
+      AddGroupForm: "../components/AddGroupForm.html"
+    },
+    data() {
+      return {
+        showLessonSummaryForm: false,
+        showNewMaterialForm: false,
+        showAddGroupForm: false,
+        showCreateNewUserForm: false
+      }
     }
   };
 </script>

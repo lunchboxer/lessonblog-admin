@@ -6,15 +6,28 @@
 
 <p>{$_('chooseClass')}</p>
 {#each $groups as group}
-<li><a href="/classes/{group.name}">{$_('className', {name: group.name})}</a></li>
+<li><a href="/classes/{group.name}">{$_('className', {name: group.name})}</a>
+  {#if $user}
+  <DeleteGroupButton group={group._id} />
+  {/if}
+</li>
 {:else}
 <p>{$_('loading', [$_.plural('classes', 10)])}</p>
 {/each}
 
 <style>
   li {
+    display: flex;
+    align-items: center;
     list-style: none;
     font-size: 3rem;
   }
 </style>
-<script></script>
+
+<script>
+  export default {
+    components: {
+      DeleteGroupButton: '../components/DeleteGroupButton.html'
+    }
+  }
+</script>
