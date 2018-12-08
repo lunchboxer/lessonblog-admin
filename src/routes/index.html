@@ -1,0 +1,20 @@
+<svelte:head>
+  <title>{$_('appName')}: {$_('nav.home')}</title>
+</svelte:head>
+
+<h1>{$_('welcome', {appName: $_('appName')})}</h1>
+
+<p>{$_('chooseClass')}</p>
+{#each $groups as group}
+<li><a href="/classes/{group.name}">{$_('className', {name: group.name})}</a></li>
+{:else}
+<p>{$_('loading', [$_.plural('classes', 10)])}</p>
+{/each}
+
+<style>
+  li {
+    list-style: none;
+    font-size: 3rem;
+  }
+</style>
+<script></script>

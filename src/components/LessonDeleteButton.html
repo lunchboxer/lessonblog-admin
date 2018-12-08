@@ -1,0 +1,35 @@
+{#if confirm}
+<button class="button-outline" on:click="handleDelete(lesson._id)">
+  {$_('summary.deleteConfirm')}
+</button>
+{:else}
+<button class="button-outline" on:click="set({confirm:true})">
+  {$_('summary.delete')}
+</button>
+{/if}
+
+<script>
+  import client from "../utils/feathers.js";
+  import { goto } from "../../__sapper__/client.js";
+  export default {
+    data() {
+      return {
+        confirm: false
+      };
+    },
+    methods: {
+      handleDelete(id) {
+        const { lessons } = this.store.get();
+        client
+          .service("lessons")
+          .remove(id)
+          .then(res => {
+            const newLessons = lessons.data.filter(lesson => {
+              return lesson._id !== id;
+            });
+            this.store.set({ lessons: { data: newLessons } });
+          });
+      }
+    }
+  };
+</script>

@@ -1,0 +1,71 @@
+<div class="lesson-summary">
+  <a href="/lessons/{lesson._id}">
+    <h2>{$_('summary.heading', {number: lesson.number})} - {date}</h2>
+  </a>
+  {#if $user}
+  <a class="button button-outline" href="/edit-lesson/{lesson._id}">{$_('summary.edit')}</a>
+  <LessonDeleteButton {lesson} />
+
+  <!-- show both for logged in user. if no Chinese show a button to translate -->
+  <p>{lesson.summary_EN}</p>
+
+  {#if lesson.summary_ZH}
+  <p>{lesson.summary_ZH}</p>
+  {:else}
+  <p class="error">{$_('summary.notTranslated')}</p>
+  {/if}
+  {:elseif $locale === 'en-US'}
+  <p>{lesson.summary_EN}</p>
+  {:elseif lesson.summary_ZH}
+  <p>{lesson.summary_ZH}</p>
+  {:else}
+  <!-- if they want chinese but there isn't any, show the english -->
+  <p>{$_('summary.notTranslated')}</p>
+  <p>{lesson.summary_EN}</p>
+  {/if}
+
+
+  {#if lesson.materials.length > 0}
+  {#if !showMaterials}
+  <button on:click="set({showMaterials: true})">{$_('showMaterials')}</button>
+  {:else}
+  <MaterialsList {lesson} />
+  {/if}
+  {/if}
+</div>
+
+<style>
+  .lesson-summary {
+    margin: 2rem 0;
+    padding: 2rem;
+    border: 1px solid #dddddd;
+    border-radius: 1rem;
+  }
+
+  .error {
+    color: red;
+  }
+</style>
+<script>
+  export default {
+    components: {
+      MaterialsList: "./MaterialsList.html",
+      LessonDeleteButton: "./LessonDeleteButton.html"
+    },
+    data() {
+      return {
+        showMaterials: true
+      }
+    },
+    computed: {
+      date: ({ lesson, $locale }) => {
+        const lessonDate = new Date(lesson.date);
+        return lessonDate.toLocaleDateString($locale);
+      },
+      summary: ({ lesson }) => {
+        if (lesson.summary_EN.length <= 200) return lesson.summary_EN;
+        return lesson.summary_EN.replace(/^(.{200}[^\s]*).*/, "$1") + " ...";
+      }
+    }
+  };
+</script>

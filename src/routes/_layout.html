@@ -1,0 +1,43 @@
+<Nav segment={child.segment} />
+
+<main>
+  <svelte:component this={child.component} {...child.props} />
+</main>
+
+<style>
+  main {
+    position: relative;
+    max-width: 56em;
+    background-color: white;
+    padding: 2em;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+ 
+  import client from '../utils/feathers'
+  import store from '../utils/store'
+  export default {
+    components: {
+      Nav: '../components/Nav.html'
+    },
+    store: () => store,
+    oncreate() {
+      client.service("groups").find().then(res => this.store.set({ groups: res.data }))
+      client
+        .authenticate()
+        .catch(error => this.store.set({ login: null, user: null }));
+      client.on('authenticated', this.authenticatedListener)
+    },
+    methods: {
+      async authenticatedListener(res) {
+        store.set({ login: res.accessToken })
+        const payload = await client.passport.verifyJWT(res.accessToken)
+        const user = await client.service('users').get(payload.userId)
+        store.set({ user })
+      }
+    }
+  };
+</script>

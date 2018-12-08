@@ -1,0 +1,119 @@
+{#if lesson}
+{#if groupName}
+<a href="/classes/{groupName}">&leftarrow; {$_('summary.returnToClass', {groupName})}</a>
+{/if}
+<h2>{$_('summary.editHeading', {groupName, number: lesson.number})}</h2>
+<RequireAuth>
+
+  <form novalidate ref:form on:submit="handleSubmit(event)">
+    <fieldset>
+      <label for="numberField">{$_('summary.number')}</label>
+      <input type="number" bind:value=lesson.number />
+
+      <label for="dateField">{$_('summary.date')}</label>
+      <input id="dateField" type="date" bind:value=date />
+
+      <label for="group-select">{$_('summary.class')}</label>
+      <select id="group-select" bind:value=lesson.group required>
+        <option value=''></option>
+        {#each $groups as group}
+        <option value={group._id}>{group.name}</option>
+        {/each}
+      </select>
+
+      <label for="summaryENField">{$_('summary.summaryEN')}</label>
+      <textarea bind:value=lesson.summary_EN />
+
+      <label for="summaryZHField">{$_('summary.summaryZH')}</label>
+    <textarea bind:value=summary_ZH />
+    <br>
+    <input type="submit" value="{$_('save')}" class="button" ref:submit />
+    <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click='set({show:false})' />
+    {#if error}
+    <br>
+    <span class="error">{error}</span>
+    {/if}
+  </fieldset>
+</form>
+</RequireAuth>
+{/if}
+
+
+<style>
+select {
+  max-width: 40rem;
+}
+
+.error {
+  color: red;
+}
+
+form,
+fieldset {
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+
+<script>
+  import client from "../../utils/feathers.js";
+  import { goto } from "../../../__sapper__/client.js";
+  export default {
+    components: {
+      RequireAuth: "../../components/RequireAuth.html"
+    },
+    preload({ params, query }) {
+      const { id } = params;
+      return { lessonId: id };
+    },
+    oncreate() {
+      client
+        .service("lessons")
+        .get(this.get().lessonId)
+        .then(lesson => {
+          const summary_ZH = !lesson.summary_ZH ? '' : lesson.summary_ZH
+          const date = lesson.date.slice(0, 10)
+          this.set({ lesson, summary_ZH, date })
+        });
+    },
+    computed: {
+      groupName: ({ lesson, $groups }) => {
+        if (!lesson || !$groups.length) return
+        const group = $groups.find(group => group._id === lesson.group)
+        if (group) return group.name
+      }
+    },
+    data() {
+      return {
+        lesson: null,
+        error: '',
+        summary_ZH: '',
+        date: ''
+      }
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.preventDefault()
+        const isValid = this.refs.form.checkValidity()
+        if (!isValid) return
+        this.refs.submit.disabled = true
+        const { date, summary_ZH, lesson, groupName } = this.get()
+        const { group, number, summary_EN } = lesson
+        client
+          .service("lessons")
+          .patch(lesson._id, { date, summary_ZH, number, summary_EN, group })
+          .then(() => {
+            this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+            this.refs && (this.refs.submit.disabled = false)
+            goto(`/classes/${groupName}`)
+          })
+          .catch(error => {
+            this.refs && (this.refs.submit.disabled = false)
+            this.set({ error: error.message })
+          })
+      }
+    }
+  };
+</script>

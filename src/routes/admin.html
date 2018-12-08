@@ -1,0 +1,23 @@
+<svelte:head>
+  <title>{$_('appName')}: {$_('nav.admin')}</title>
+</svelte:head>
+
+<h1>{$_('admin.title', {appName: $_('appName')})}</h1>
+
+<RequireAuth>
+  <!-- Just have all these on one page seperate components forms with submit buttons -->
+  <LessonSummaryForm />
+  <button>New material</button>
+  <button>Add a group</button>
+  <button>create new user</button>
+
+</RequireAuth>
+
+<script>
+  export default {
+    components: {
+      RequireAuth: "../components/RequireAuth.html",
+      LessonSummaryForm: "../components/LessonSummaryForm.html"
+    }
+  };
+</script>

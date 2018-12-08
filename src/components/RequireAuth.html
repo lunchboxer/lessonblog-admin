@@ -1,0 +1,6 @@
+{#if $login}
+<slot />
+{:else}
+<h2>{$_('restricted.title')}</h2>
+<p>{@html $_('restricted.description')}</p>
+{/if}

@@ -1,0 +1,39 @@
+{#if lesson}
+{#if groupName}
+<a href="/classes/{groupName}">&leftarrow; {$_('summary.returnToClass', {groupName})}</a>
+{/if}
+<LessonSummary lesson={lesson} />
+{:else}
+<p>{$_('loading', [$_.plural('lessons', 1)])}</p>
+{/if}
+
+<script>
+  import client from "../../utils/feathers.js";
+  export default {
+    components: {
+      LessonSummary: '../../components/LessonSummary.html'
+    },
+    preload({ params, query }) {
+      const { id } = params;
+      return { lessonId: id };
+    },
+    oncreate() {
+      client
+        .service("lessons")
+        .get(this.get().lessonId)
+        .then(lesson => this.set({ lesson }));
+    },
+    data() {
+      return {
+        lesson: null
+      };
+    },
+    computed: {
+      groupName: ({ lesson, $groups }) => {
+        if (!lesson || !$groups.length) return
+        const group = $groups.find(group => group._id === lesson.group)
+        if (group) return group.name
+      }
+    }
+  };
+</script>

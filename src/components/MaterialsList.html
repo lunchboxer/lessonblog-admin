@@ -1,0 +1,27 @@
+<h3>{$_('materials')}</h3>
+{#await materials}
+<p>{$_('loading', [$_('materials')])}</p>
+{:then answer}
+{#each answer as material (material.id)}
+<MaterialCard {material} />
+{/each}
+{:catch}
+<p>{$_('loadingFailed', [$_('materials')])}</p>
+{/await}
+
+<script>
+  import client from '../utils/feathers.js'
+  export default {
+    components: {
+      MaterialCard: "./MaterialCard.html"
+    },
+    computed: {
+      materials: async ({ lesson }) => {
+        if (lesson.materials.length) {
+          const res = await client.service("materials").find({ query: { _id: { $in: lesson.materials } } }).catch(error => console.log(error))
+          return res.data
+        }
+      }
+    }
+  }
+</script>

@@ -1,0 +1,56 @@
+<svelte:head>
+  <title>{$_('appName')}: {$_('profile.title')}</title>
+</svelte:head>
+
+<h1>{$_('profile.title')}</h1>
+
+<RequireAuth>
+  {#if !$user}
+  <p>{$_('loading', $_pluralize('users', 1))}</p>
+  {:else}
+  <table>
+    <tbody>
+      <tr>
+        <td>{$_('username')}</td>
+        <td>{$user.username}</td>
+      </tr>
+      <tr>
+        <td>{$_('profile.id')}</td>
+        <td>{$user._id}</td>
+      </tr>
+      <tr>
+        <td>{$_('profile.created')}</td>
+        <td>{createdDate}</td>
+      </tr>
+      <tr>
+        <td>{$_('profile.updated')}</td>
+        <td>{updatedDate}</td>
+      </tr>
+    </tbody>
+  </table>
+  {/if}
+</RequireAuth>
+
+<script>
+  export default {
+    components: {
+      RequireAuth: "../components/RequireAuth.html"
+    },
+    computed: {
+      createdDate: ({ $user }) => {
+        if ($user) {
+          const date = new Date($user.createdAt);
+          return date.toDateString();
+        }
+        return false;
+      },
+      updatedDate: ({ $user }) => {
+        if ($user) {
+          const date = new Date($user.updatedAt);
+          return date.toDateString();
+        }
+        return false;
+      }
+    }
+  };
+</script>

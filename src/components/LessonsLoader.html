@@ -1,0 +1,12 @@
+<script>
+  import client from "../utils/feathers";
+  export default {
+    oncreate() {
+      const { group } = this.get();
+      client
+        .service("lessons")
+        .find({ query: { group: group._id, $sort: { number: -1 } } })
+        .then(lessons => this.store.set({ lessons }));
+    }
+  };
+</script>

@@ -1,0 +1,57 @@
+<svelte:head>
+  <title>{$_('appName')}: {$_('lessonList.title', {groupName})}</title>
+</svelte:head>
+
+<h1>{$_('lessonList.title', {groupName})}</h1>
+
+<div class="content">
+  {#if group} 
+
+    <LessonsLoader {group} />
+    {#if !$lessons}
+      <p>{$_('loading', [$_('lessons')])}</p>
+    {:elseif $lessons.total === 0}
+      <p>{$_('lessonList.none')}</p>
+    {:else}
+      {#if $lessons.data[0].group === group._id}
+      {#each $lessons.data as lesson (lesson._id)}
+        <LessonSummary lesson="{lesson}" showMaterials="{false}" />
+      {/each} 
+      {/if}   
+    {/if}
+
+  {:elseif $groups.length}
+    <p>{$_('classNotFound')}</p>
+  {/if}
+ 
+</div>
+
+<script>
+  import client from "../../utils/feathers.js";
+  export default {
+    components: {
+      LessonSummary: "../../components/LessonSummary.html",
+      LessonsLoader: "../../components/LessonsLoader.html"
+    },
+    data() {
+      return {
+        error: null
+      };
+    },
+    preload({ params, query }) {
+      const { group } = params;
+      return { groupName: group };
+    },
+    oncreate() {
+      this.store.set({ lesson: null });
+      const { group } = this.get();
+      if (group) this.store.set({ group });
+    },
+    computed: {
+      group: ({ $groups, groupName }) => $groups.find(group => group.name === groupName),
+      topLesson: ({ $lessons }) => {
+        if ($lessons && $lessons.total > 0) return $lessons.data[0]._id;
+      }
+    }
+  };
+</script>

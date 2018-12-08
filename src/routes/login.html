@@ -1,0 +1,68 @@
+<svelte:head>
+  <title>{$_('appName')}: {$_('nav.login')}</title>
+</svelte:head>
+
+<h1>{$_('login.title', [$_('appName')])}</h1>
+{#if $login}
+<p>{$_('login.alreadyLoggedIn')}</p>
+{:else}
+<form on:submit="handleSubmit(event)">
+  <fieldset>
+    <label for="usernameField">{$_('login.username')}</label>
+    <input type="text" id="usernameField" bind:value="username" />
+    <label for="passwordField">{$_('login.password')}</label>
+    <input type="password" id="passwordField" bind:value="password" /> <br />
+    <input class="button" type="submit" value="{$_('login.submit')}" id="loginButton" />
+    <input class="button button-outline" type="reset" on:click="goto('/')" value="{$_('cancel')}" id="cancelButton" />
+    <span class="error">{error}</span>
+  </fieldset>
+</form>
+{/if}
+
+<style>
+  input[type="text"],
+  input[type="password"] {
+    max-width: 30rem;
+  }
+
+  .error {
+    color: red;
+  }
+</style>
+
+<script>
+  import client from "../utils/feathers";
+  import { goto } from "../../__sapper__/client.js";
+
+  export default {
+    data() {
+      return {
+        username: "",
+        password: "",
+        error: ""
+      };
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.target.querySelector("input[type=submit]").disabled = true;
+        event.preventDefault();
+        const { username, password } = this.get();
+        return client
+          .authenticate({
+            strategy: "local",
+            username,
+            password
+          })
+          .then(() => {
+            this.set({ username: "", password: "" });
+            goto("/");
+          })
+          .catch(error => {
+            event.target.querySelector("input[type=submit]").disabled = false;
+            this.set({ error: error.message });
+          });
+      }
+    }
+  };
+</script>

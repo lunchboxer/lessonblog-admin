@@ -1,0 +1,106 @@
+<div class="form-container">
+  <h2>{$_('admin.newLesson')}</h2>
+
+  <form novalidate ref:form on:submit="handleSubmit(event)">
+    <fieldset>
+      <label for="numberField">{$_('summary.number')}</label>
+      <input type="number" bind:value=number />
+
+      <label for="dateField">{$_('summary.date')}</label>
+      <input id="dateField" type="date" bind:value=date />
+
+      <label for="group-select">{$_('summary.class')}</label>
+      <select id="group-select" bind:value=group required>
+        <option value=''></option>
+        {#each $groups as group}
+        <option value={group._id}>{group.name}</option>
+        {/each}
+      </select>
+
+      <label for="summaryENField">{$_('summary.summaryEN')}</label>
+      <textarea bind:value=summary_EN />
+
+      <label for="summaryZHField">{$_('summary.summaryZH')}</label>
+      <textarea bind:value=summary_ZH />
+      <br>
+      <input type="submit" value="{$_('save')}" class="button" ref:submit />
+      <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click='set({show:false})' />
+      {#if error}
+      <br>
+      <span class="error">{error}</span>
+      {/if}
+    </fieldset>
+  </form>
+</div>
+
+<style>
+  select {
+    max-width: 40rem;
+  }
+
+  .error {
+    color: red;
+  }
+
+  .form-container {
+    padding: 2rem;
+    border: 1px solid #eeeeee;
+  }
+
+  form,
+  fieldset {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers.js'
+  import { goto } from "../../__sapper__/client.js";
+
+  export default {
+    data() {
+      return {
+        group: '',
+        error: '',
+        date: '',
+        number: '',
+        summary_EN: '',
+        summary_ZH: '',
+      }
+    },
+    computed: {
+      groupName: ({ group, $groups }) => {
+        if (!group || !$groups.length) return
+        const thisgroup = $groups.find(one => one._id === group)
+        if (thisgroup) {
+          console.log('new groupname', thisgroup.name)
+          return thisgroup.name
+        }
+      }
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.preventDefault()
+        const isValid = this.refs.form.checkValidity()
+        if (!isValid) return
+        this.refs.submit.disabled = true
+        const { number, date, summary_EN, summary_ZH, groupName } = this.get()
+        const group = this.get().group || null
+        client
+          .service("lessons")
+          .create({ group, number, date, summary_EN, summary_ZH })
+          .then(() => {
+            this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+            this.refs && (this.refs.submit.disabled = false)
+            this.goto(`/classes/${groupName}`)
+          })
+          .catch(error => {
+            this.refs && (this.refs.submit.disabled = false)
+            this.set({ error: error.message })
+          })
+      }
+    }
+  }
+</script>
