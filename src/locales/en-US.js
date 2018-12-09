@@ -35,7 +35,7 @@ export const enUs = {
     title: '{appName} admin',
     newLesson: 'New lesson summary',
     newMaterial: 'New material',
-    addGroup: 'Add a group',
+    addGroup: 'Create a new class',
     newUser: 'Create a user',
     className: 'Class name'
   },
