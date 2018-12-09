@@ -24,7 +24,7 @@
       <textarea bind:value=summary_ZH />
       <br>
       <input type="submit" value="{$_('save')}" class="button" ref:submit />
-      <input type="reset" value="{$_('cancel')}" class="button button-outline" />
+      <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click="$set({showLessonSummaryForm: false})" />
       {#if error}
       <br>
       <span class="error">{error}</span>
@@ -74,7 +74,6 @@
         if (!group || !$groups.length) return
         const thisgroup = $groups.find(one => one._id === group)
         if (thisgroup) {
-          console.log('new groupname', thisgroup.name)
           return thisgroup.name
         }
       }
@@ -94,6 +93,7 @@
           .then(() => {
             this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
             this.refs && (this.refs.submit.disabled = false)
+            this.store.set({ showLessonSummaryForm: false })
             this.goto(`/classes/${groupName}`)
           })
           .catch(error => {

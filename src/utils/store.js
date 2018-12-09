@@ -9,7 +9,11 @@ let store = new Store({
   groups: [],
   lessons: null,
   user: null,
-  login: null
+  login: null,
+  showLessonSummaryForm: false,
+  showNewMaterialForm: false,
+  showAddGroupForm: false,
+  showCreateNewUserForm: false
 })
 
 store = i18n(store, {

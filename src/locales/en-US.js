@@ -7,8 +7,6 @@ export const enUs = {
   login: {
     title: '{0} login',
     alreadyLoggedIn: 'You are already logged in.',
-    username: 'username',
-    password: 'password',
     submit: 'log in'
   },
   restricted: {
@@ -78,6 +76,7 @@ export const enUs = {
   },
   showMaterials: 'Show materials',
   username: 'username',
+  password: 'password',
   delete: 'Delete',
   deleteConfirm: 'Confirm delete'
 }

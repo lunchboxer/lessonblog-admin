@@ -5,8 +5,6 @@ export const zhCn = {
   login: {
     title: '登录{0}',
     alreadyLoggedIn: '您也登录好了。',
-    username: '用户名',
-    password: '密码',
     submit: '登录'
   },
   restricted: {
@@ -75,6 +73,7 @@ export const zhCn = {
   },
   showMaterials: '加载材料',
   username: '用户名',
+  password: '密码',
   delete: '删除',
   deleteConfirm: '确认要删除'
 }

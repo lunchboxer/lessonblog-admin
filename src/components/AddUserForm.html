@@ -1,23 +1,17 @@
 <div class="form-container">
-  <h2>{$_('admin.newMaterial')}</h2>
+  <h2>{$_('admin.newUser')}</h2>
 
   <form novalidate ref:form on:submit="handleSubmit(event)">
     <fieldset>
-      <label for="uriField">{$_('material.uri')}</label>
-      <input id="uriField" type="text" bind:value=uri />
+      <label for="usernameField">{$_('username')}</label>
+      <input id="usernameField" type="text" bind:value=username />
 
-      <label for="titleField">{$_('material.title')}</label>
-      <input id="titleField" type="text" bind:value=title />
-
-      <label for="typeField">{$_('material.type')}</label>
-      <input id="typeField" type="text" bind:value=type />
-
-      <label for="notesField">{$_('material.notes')}</label>
-      <input id="notesField" type="text" bind:value=notes />
+      <label for="passwordField">{$_('password')}</label>
+      <input id="passwordField" type="text" bind:value=password />
 
       <br>
       <input type="submit" value="{$_('save')}" class="button" ref:submit />
-      <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click="$set({showNewMaterialForm: false})" />
+      <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click="$set({showAddUserForm: false})" />
       {#if error}
       <br>
       <span class="error">{error}</span>
@@ -50,10 +44,8 @@
   export default {
     data() {
       return {
-        uri: '',
-        title: '',
-        type: '',
-        notes: '',
+        username: '',
+        password: '',
         error: ''
       }
     },
@@ -64,15 +56,14 @@
         const isValid = this.refs.form.checkValidity()
         if (!isValid) return
         this.refs.submit.disabled = true
-        const { uri, title, type, notes } = this.get()
+        const { username, password } = this.get()
         client
-          .service("materials")
-          .create({ uri, title, type, notes })
-          .then(() => {
-            this.set({ error: '', uri: '', title: '', type: '', notes: '' })
+          .service("users")
+          .create({ username, password })
+          .then(group => {
+            this.set({ error: '', username: '', password: '' })
             this.refs && (this.refs.submit.disabled = false)
-            this.state.set({ showNewMaterialForm: false })
-            goto('/admin')
+            this.store.set({ showAddUserForm: false })
           })
           .catch(error => {
             this.refs && (this.refs.submit.disabled = false)
