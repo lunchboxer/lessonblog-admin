@@ -15,7 +15,7 @@
   {:else}
   {#if $lessons.data[0].group === group._id}
   {#each $lessons.data as lesson (lesson._id)}
-  <LessonSummary lesson="{lesson}" showMaterials="{false}" />
+  <LessonSummary lesson="{lesson}" showMaterials="{topLesson === lesson._id}" />
   {/each}
   {/if}
   {/if}

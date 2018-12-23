@@ -1,0 +1,34 @@
+<div style="--size: {size}px">
+  <a href="{image.uri}">
+    <img src="{thumbURI}" alt="{image.title}" />
+  </a>
+</div>
+
+<style>
+  div {
+    height: var(--size);
+    width: var(--size);
+  }
+
+  img {
+    margin-right: 0.5rem;
+  }
+</style>
+
+<script>
+  export default {
+    data() {
+      return {
+        size: 80
+      }
+    },
+    computed: {
+      thumbURI: ({ image, size }) => {
+        const brokenuri = image.uri.split('/')
+        const params = `w_${size},h_${size},c_fit`
+        brokenuri.splice(-2, 1, params)
+        return brokenuri.join('/')
+      }
+    }
+  }
+</script>

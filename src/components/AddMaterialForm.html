@@ -71,7 +71,7 @@
           .then(() => {
             this.set({ error: '', uri: '', title: '', type: '', notes: '' })
             this.refs && (this.refs.submit.disabled = false)
-            this.state.set({ showNewMaterialForm: false })
+            this.store.set({ showNewMaterialForm: false })
             goto('/admin')
           })
           .catch(error => {

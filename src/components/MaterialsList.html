@@ -1,8 +1,11 @@
-<h3>{$_('materials')}</h3>
+<h4>{$_('materials')}</h4>
 {#await materials}
 <p>{$_('loading', [$_('materials')])}</p>
 {:then answer}
-{#each answer as material (material.id)}
+{#each answer.images as image (image._id)}
+<MaterialsThumb {image} size=80 />
+{/each}
+{#each answer.others as material (material._id)}
 <MaterialCard {material} />
 {/each}
 {:catch}
@@ -13,13 +16,16 @@
   import client from '../utils/feathers.js'
   export default {
     components: {
-      MaterialCard: "./MaterialCard.html"
+      MaterialCard: "./MaterialCard.html",
+      MaterialsThumb: "./MaterialsThumb.html"
     },
     computed: {
       materials: async ({ lesson }) => {
         if (lesson.materials.length) {
           const res = await client.service("materials").find({ query: { _id: { $in: lesson.materials } } }).catch(error => console.log(error))
-          return res.data
+          const images = res.data.filter(thing => thing.type.split('/')[0] === 'image')
+          const others = res.data.filter(thing => thing.type.split('/')[0] !== 'image')
+          return { images, others }
         }
       }
     }

@@ -1,8 +1,60 @@
-<div>
-  <a href="{material.uri}">{material.title} ({material.type})</a>
-</div>
+<a href="{material.uri}">
+  <div>
+    {#if simpletype === 'image'}
+    <img src="{thumbURI}" alt="{material.title}" />
+    {:else}
+    <i class="material-icons">
+      {#if simpletype === 'video'}
+      live_tv
+      {:elseif simpletype === 'audio'}
+      audiotrack
+      {:else}
+      attachment
+      {/if}
+    </i>
+    {/if}
+    <span>{material.title}</span>
+  </div>
+</a>
+
+<style>
+  div {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: .5rem;
+    margin: .5rem;
+  }
+
+  span {
+    font-size: 1em;
+  }
+
+  img {
+    margin-right: 0.5rem;
+    border: 1px solid grey;
+  }
+
+  i {
+    font-size: 4rem;
+    margin-right: 0.5rem;
+  }
+</style>
 
 <script>
   export default {
+    computed: {
+      simpletype: ({ material }) => {
+        if (!material.type) return ''
+        return material.type.split('/')[0]
+      },
+      thumbURI: ({ material, simpletype }) => {
+        if (simpletype !== 'image') return ''
+        const brokenuri = material.uri.split('/')
+        const params = 'w_80,h_80,c_fit'
+        brokenuri.splice(-2, 1, params)
+        return brokenuri.join('/')
+      }
+    }
   }
 </script>
