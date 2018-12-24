@@ -1,25 +1,18 @@
 <nav>
   <ul class="float-left">
-    <li><a class='{segment === undefined ? "selected" : ""} home' href='.'>{$_('appName')}</a></li>
+    <li><a class='{segment === undefined ? "selected" : ""} home' href='.'>Home</a></li>
 
     <!-- <li><a class='{segment === "about" ? "selected" : ""}' href='about'>{$_('nav.about')}</a></li> -->
   </ul>
   <ul class="float-right">
-    <li>
-      {#if $locale === 'en-US'}
-      <button on:click="$i18n.setLocale('zh-CN')" class="button-clear">中文</button>
-      {:else}
-      <button on:click="$i18n.setLocale('en-US')" class="button-clear">English</button>
-      {/if}
-    </li>
     {#if $user}
-    <li><a class='{segment === "admin" ? "selected" : ""}' href="/admin">{$_('nav.admin')}</a></li>
+    <li><a class='{segment === "admin" ? "selected" : ""}' href="/admin">Admin</a></li>
     {/if}
     <li>
       {#if $user}
       <UserMenu segment={segment}></UserMenu>
       {:else}
-      <a class='{segment === ("login") ? "selected" : ""}' href='login'>{$_('nav.login')}</a>
+      <a class='{segment === ("login") ? "selected" : ""}' href='login'>Login</a>
       {/if}
     </li>
   </ul>

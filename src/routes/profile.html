@@ -1,29 +1,29 @@
 <svelte:head>
-  <title>{$_('appName')}: {$_('profile.title')}</title>
+  <title>Orchard: My profile</title>
 </svelte:head>
 
-<h1>{$_('profile.title')}</h1>
+<h1>My profile</h1>
 
 <RequireAuth>
   {#if !$user}
-  <p>{$_('loading', $_pluralize('users', 1))}</p>
+  <p>Loading user...</p>
   {:else}
   <table>
     <tbody>
       <tr>
-        <td>{$_('username')}</td>
+        <td>Username</td>
         <td>{$user.username}</td>
       </tr>
       <tr>
-        <td>{$_('profile.id')}</td>
+        <td>User ID</td>
         <td>{$user._id}</td>
       </tr>
       <tr>
-        <td>{$_('profile.created')}</td>
+        <td>Created</td>
         <td>{createdDate}</td>
       </tr>
       <tr>
-        <td>{$_('profile.updated')}</td>
+        <td>Updated</td>
         <td>{updatedDate}</td>
       </tr>
     </tbody>

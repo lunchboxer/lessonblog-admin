@@ -1,17 +1,17 @@
 <svelte:head>
-  <title>{$_('appName')}: {$_('lessonList.title', {groupName})}</title>
+  <title>果园英语：{groupName}班课程内容</title>
 </svelte:head>
 
-<h2>{$_('lessonList.title', {groupName})}</h2>
+<h2>{groupName}班课程内容</h2>
 
 <div class="content">
   {#if group}
 
   <LessonsLoader {group} />
   {#if !$lessons}
-  <p>{$_('loading', [$_('lessons')])}</p>
+  <p>正在加载课程内容。。。</p>
   {:elseif $lessons.total === 0}
-  <p>{$_('lessonList.none')}</p>
+  <p>还没有输入这个班级的课程内容。</p>
   {:else}
   {#if $lessons.data[0].group === group._id}
   {#each $lessons.data as lesson (lesson._id)}
@@ -21,7 +21,7 @@
   {/if}
 
   {:elseif $groups.length}
-  <p>{$_('classNotFound')}</p>
+  <p>不好意思，没找到这个班级。</p>
   {/if}
 
 </div>

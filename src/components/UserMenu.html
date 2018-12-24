@@ -3,9 +3,9 @@
   visible}
   <ul transition:fade class="dropdown" on:click="set({visible:false})">
     {#if segment!=="profile"}
-    <li><a href="profile">{$_('nav.profile')}</a></li>
+    <li><a href="profile">Profile</a></li>
     {/if}
-    <li><a href="/" on:click="handleLogout()">{$_('nav.logout')}</a></li>
+    <li><a href="/" on:click="handleLogout()">Log out</a></li>
   </ul>
   {/if}
 </div>

@@ -1,36 +1,36 @@
 <svelte:head>
-  <title>{$_('appName')}: {$_('nav.admin')}</title>
+  <title>Orchard: Admin</title>
 </svelte:head>
 
-<h1>{$_('admin.title', {appName: $_('appName')})}</h1>
+<h1>Orchard admin</h1>
 
 <RequireAuth>
   <!-- Just have all these on one page seperate components forms with submit buttons -->
   {#if $showLessonSummaryForm}
   <LessonSummaryForm />
   {:else}
-  <button on:click="$set({showLessonSummaryForm:true})">{$_('admin.newLesson')}</button>
+  <button on:click="$set({showLessonSummaryForm:true})">New lesson summary</button>
   {/if}
 
   <br>
   {#if $showNewMaterialForm}
   <AddMaterialForm />
   {:else}
-  <button on:click="$set({showNewMaterialForm:true})">{$_('admin.newMaterial')}</button>
+  <button on:click="$set({showNewMaterialForm:true})">New material</button>
   {/if}
 
   <br>
   {#if $showAddGroupForm}
   <AddGroupForm />
   {:else}
-  <button on:click="$set({showAddGroupForm: true})">{$_('admin.addGroup')}</button>
+  <button on:click="$set({showAddGroupForm: true})">Create new class</button>
   {/if}
 
   <br>
   {#if $showAddUserForm}
   <AddUserForm />
   {:else}
-  <button on:click="$set({showAddUserForm: true})">{$_('admin.newUser')}</button>
+  <button on:click="$set({showAddUserForm: true})">Create a user</button>
   {/if}
 
 </RequireAuth>

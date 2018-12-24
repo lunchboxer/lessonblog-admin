@@ -1,18 +1,18 @@
 <svelte:head>
-  <title>{$_('appName')}: {$_('nav.home')}</title>
+  <title>果园英语首页</title>
 </svelte:head>
 
-<h1>{$_('welcome', {appName: $_('appName')})}</h1>
+<h1>果园英语欢迎您</h1>
 
-<p>{$_('chooseClass')}</p>
+<p>请选择班级以查看课程内容。</p>
 {#each $groups as group}
-<li><a href="/classes/{group.name}">{$_('className', {name: group.name})}</a>
+<li><a href="/classes/{group.name}">{group.name}班</a>
   {#if $user}
   <DeleteGroupButton group={group._id} />
   {/if}
 </li>
 {:else}
-<p>{$_('loading', [$_.plural('classes', 10)])}</p>
+<p>正在加载班级。。。</p>
 {/each}
 
 <style>

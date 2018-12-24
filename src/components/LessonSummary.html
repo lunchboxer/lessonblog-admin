@@ -1,9 +1,9 @@
 <div class="lesson-summary">
   <a href="/lessons/{lesson._id}">
-    <h3>{$_('summary.heading', {number: lesson.number})} - {date}</h3>
+    <h3>第{lesson.number}课 - {date}</h3>
   </a>
   {#if $user}
-  <a class="button button-outline" href="/edit-lesson/{lesson._id}">{$_('summary.edit')}</a>
+  <a class="button button-outline" href="/edit-lesson/{lesson._id}">编辑</a>
   <LessonDeleteButton {lesson} />
 
   <!-- show both for logged in user. if no Chinese show a button to translate -->
@@ -12,7 +12,7 @@
   {#if lesson.summary_ZH}
   <p>{lesson.summary_ZH}</p>
   {:else}
-  <p class="error">{$_('summary.notTranslated')}</p>
+  <p class="error">这节课还没有翻译成中文的课程内容。</p>
   {/if}
   {:elseif $locale === 'en-US'}
   <p>{lesson.summary_EN}</p>
@@ -20,14 +20,14 @@
   <p>{lesson.summary_ZH}</p>
   {:else}
   <!-- if they want chinese but there isn't any, show the english -->
-  <p>{$_('summary.notTranslated')}</p>
+  <p>这节课还没有翻译成中文的课程内容。</p>
   <p>{lesson.summary_EN}</p>
   {/if}
 
 
   {#if lesson.materials.length > 0}
   {#if !showMaterials}
-  <button on:click="set({showMaterials: true})">{$_('showMaterials')}</button>
+  <button on:click="set({showMaterials: true})">加载材料</button>
   {:else}
   <MaterialsList {lesson} />
   {/if}

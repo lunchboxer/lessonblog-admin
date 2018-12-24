@@ -3,13 +3,13 @@
 
   <form novalidate ref:form on:submit="handleSubmit(event)">
     <fieldset>
-      <label for="numberField">{$_('summary.number')}</label>
+      <label for="numberField">Lesson number</label>
       <input type="number" bind:value=number />
 
-      <label for="dateField">{$_('summary.date')}</label>
+      <label for="dateField">Lesson date</label>
       <input id="dateField" type="date" bind:value=date />
 
-      <label for="group-select">{$_('summary.class')}</label>
+      <label for="group-select">Class</label>
       <select id="group-select" bind:value=group required>
         <option value=''></option>
         {#each $groups as group}
@@ -17,14 +17,14 @@
         {/each}
       </select>
 
-      <label for="summaryENField">{$_('summary.summaryEN')}</label>
+      <label for="summaryENField">Lesson summary (English)</label>
       <textarea bind:value=summary_EN />
 
-      <label for="summaryZHField">{$_('summary.summaryZH')}</label>
+      <label for="summaryZHField">Lesson summary (Chinese)</label>
       <textarea bind:value=summary_ZH />
       <br>
-      <input type="submit" value="{$_('save')}" class="button" ref:submit />
-      <input type="reset" value="{$_('cancel')}" class="button button-outline" on:click="$set({showLessonSummaryForm: false})" />
+      <input type="submit" value="Save" class="button" ref:submit />
+      <input type="reset" value="Cancel" class="button button-outline" on:click="$set({showLessonSummaryForm: false})" />
       {#if error}
       <br>
       <span class="error">{error}</span>

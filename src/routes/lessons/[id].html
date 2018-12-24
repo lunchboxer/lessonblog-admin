@@ -1,10 +1,10 @@
 {#if lesson}
 {#if groupName}
-<a href="/classes/{groupName}">&leftarrow; {$_('summary.returnToClass', {groupName})}</a>
+<a href="/classes/{groupName}">&leftarrow; 回到{groupName}班</a>
 {/if}
 <LessonSummary lesson={lesson} />
 {:else}
-<p>{$_('loading', [$_.plural('lessons', 1)])}</p>
+<p>正在加载课程内容。。。</p>
 {/if}
 
 <script>

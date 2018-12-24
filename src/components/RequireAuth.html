@@ -1,6 +1,6 @@
 {#if $login}
 <slot />
 {:else}
-<h2>{$_('restricted.title')}</h2>
-<p>{@html $_('restricted.description')}</p>
+<h2>未登录</h2>
+<p>查看此页请<a href="login">登录</a></p>
 {/if}

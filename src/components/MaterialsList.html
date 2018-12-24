@@ -1,6 +1,6 @@
-<h4>{$_('materials')}</h4>
+<h4>材料</h4>
 {#await materials}
-<p>{$_('loading', [$_('materials')])}</p>
+<p>正在加载材料。。。</p>
 {:then answer}
 {#each answer.images as image (image._id)}
 <MaterialsThumb {image} size=80 />
@@ -9,7 +9,7 @@
 <MaterialCard {material} />
 {/each}
 {:catch}
-<p>{$_('loadingFailed', [$_('materials')])}</p>
+<p>加载材料失败了。</p>
 {/await}
 
 <script>

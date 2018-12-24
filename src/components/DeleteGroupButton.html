@@ -1,9 +1,9 @@
 <div>
   {#if !confirm}
-  <button class="button-clear" on:click="set({confirm:true})">{$_('delete')}</button>
+  <button class="button-clear" on:click="set({confirm:true})">Delete</button>
   {:else}
-  <button class="button-outline" on:click="set({confirm:false})">{$_('cancel')}</button>
-  <button class="button-clear" on:click="handleDelete(group)">{$_('deleteConfirm')}</button>
+  <button class="button-outline" on:click="set({confirm:false})">Cancel</button>
+  <button class="button-clear" on:click="handleDelete(group)">Confirm delete</button>
   {/if}
 </div>
 

@@ -1,19 +1,19 @@
 <svelte:head>
-  <title>{$_('appName')}: {$_('nav.login')}</title>
+  <title>Orchard: login</title>
 </svelte:head>
 
-<h1>{$_('login.title', [$_('appName')])}</h1>
+<h1>Orchard login</h1>
 {#if $login}
-<p>{$_('login.alreadyLoggedIn')}</p>
+<p>You are already logged in</p>
 {:else}
 <form on:submit="handleSubmit(event)">
   <fieldset>
-    <label for="usernameField">{$_('username')}</label>
+    <label for="usernameField">Username</label>
     <input type="text" id="usernameField" bind:value="username" />
-    <label for="passwordField">{$_('password')}</label>
+    <label for="passwordField">Password</label>
     <input type="password" id="passwordField" bind:value="password" /> <br />
-    <input class="button" type="submit" value="{$_('login.submit')}" id="loginButton" />
-    <input class="button button-outline" type="reset" on:click="goto('/')" value="{$_('cancel')}" id="cancelButton" />
+    <input class="button" type="submit" value="Submit" id="loginButton" />
+    <input class="button button-outline" type="reset" on:click="goto('/')" value="Cancel" id="cancelButton" />
     <span class="error">{error}</span>
   </fieldset>
 </form>
