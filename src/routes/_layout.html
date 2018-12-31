@@ -3,18 +3,24 @@
   {#if $user}
   <GroupsLoader />
   {/if}
-  {#if $APPNAME}
-  <RequireAuth>
-    <svelte:component this={child.component} {...child.props} />
-  </RequireAuth>
+
+  {#if !authStatus && !error}
+  <p>Authenticating user...</p>
+  {:elseif authStatus === "loggedIn" || error}
+  <svelte:component this={child.component} {...child.props} />
+  {:else}
+  <p>You must log in to continue</p>
+  <Login />
   {/if}
+
+
+
 </main>
 
 <style>
   main {
     position: relative;
     max-width: 56em;
-    /* background-color: white; */
     padding: 2em;
     margin: 0 auto;
     box-sizing: border-box;
@@ -26,26 +32,42 @@
   import store from '../utils/store'
 
   export default {
+    data() {
+      return {
+        error: null,
+        authStatus: null
+      }
+    },
     components: {
       GroupsLoader: "../components/GroupsLoader.html",
-      RequireAuth: "../components/RequireAuth.html",
-      Header: "../components/Header.html"
+      Header: "../components/Header.html",
+      Login: '../components/Login.html'
     },
     store: () => store,
     oncreate() {
-      const auth = client.authenticate().catch(e => this.set({ login: null, user: null }))
-      client.on('authenticated', this.authenticatedListener)
+      this.authenticate()
+      client.on('authenticated', async (res) => {
+        this.store.set({ login: res.accessToken })
+        const payload = await client.passport.verifyJWT(res.accessToken)
+        const user = await client.service('users').get(payload.userId)
+        this.store.set({ user })
+        this.set({ authStatus: 'loggedIn' })
+      })
       client.on('logout', this.logoutListener)
     },
     methods: {
-      async authenticatedListener(res) {
-        store.set({ login: res.accessToken })
-        const payload = await client.passport.verifyJWT(res.accessToken)
-        const user = await client.service('users').get(payload.userId)
-        store.set({ user })
-      },
       logoutListener() {
         store.set({ user: null, login: null })
+        this.set({ authStatus: 'loggedOut' })
+      },
+      authenticate() {
+        client.authenticate().then(res => {
+          this.store.set({ login: res.accessToken })
+          this.set({ authStatus: 'loggedIn' })
+        }).catch(() => {
+          this.set({ authStatus: 'loggedOut' })
+          this.store.set({ login: null, user: null })
+        })
       }
     }
   }
