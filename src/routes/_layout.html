@@ -1,12 +1,12 @@
-<Header />
+<Header segment={child.segment} />
 <main>
   {#if $user}
   <GroupsLoader />
   {/if}
 
-  {#if !authStatus && !error}
+  {#if !$authStatus && !error}
   <p>Authenticating user...</p>
-  {:elseif authStatus === "loggedIn" || error}
+  {:elseif $authStatus === "loggedIn" || error}
   <svelte:component this={child.component} {...child.props} />
   {:else}
   <p>You must log in to continue</p>
@@ -34,8 +34,7 @@
   export default {
     data() {
       return {
-        error: null,
-        authStatus: null
+        error: null
       }
     },
     components: {
@@ -50,24 +49,18 @@
         this.store.set({ login: res.accessToken })
         const payload = await client.passport.verifyJWT(res.accessToken)
         const user = await client.service('users').get(payload.userId)
-        this.store.set({ user })
-        this.set({ authStatus: 'loggedIn' })
+        this.store.set({ user, authStatus: 'loggedIn' })
       })
       client.on('logout', this.logoutListener)
     },
     methods: {
       logoutListener() {
-        store.set({ user: null, login: null })
-        this.set({ authStatus: 'loggedOut' })
+        store.set({ user: null, login: null, authStatus: 'loggedOut' })
       },
       authenticate() {
         client.authenticate().then(res => {
-          this.store.set({ login: res.accessToken })
-          this.set({ authStatus: 'loggedIn' })
-        }).catch(() => {
-          this.set({ authStatus: 'loggedOut' })
-          this.store.set({ login: null, user: null })
-        })
+          this.store.set({ login: res.accessToken, authStatus: 'loggedIn' })
+        }).catch(this.store.set({ login: null, user: null, authStatus: 'loggedOut' }))
       }
     }
   }

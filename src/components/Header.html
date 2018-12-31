@@ -5,11 +5,11 @@
         <a href="/">Orchard Admin</a>
       </h1>
     </div>
-    <div class="float-right">
-      <span class="menu" on:click="set({showMenu: !showMenu})">
-        <i class="material-icons">menu</i>
-      </span>
+    {#if $user}
+    <div class="float-right menu">
+      <Menu {segment} />
     </div>
+    {/if}
   </nav>
 </header>
 <style>
@@ -40,13 +40,16 @@
 
   .menu {
     position: absolute;
-    top: 16px;
+    top: 15px;
     right: 2rem;
   }
 </style>
 
 <script>
   export default {
+    components: {
+      Menu: './Menu.html'
+    },
     data() {
       return {
         showMenu: false

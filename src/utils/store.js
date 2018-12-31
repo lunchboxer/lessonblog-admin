@@ -10,7 +10,8 @@ let store = new Store({
   showLessonSummaryForm: false,
   showNewMaterialForm: false,
   showAddGroupForm: false,
-  showCreateNewUserForm: false
+  showCreateNewUserForm: false,
+  authStatus: null,
 })
 
 export default store
