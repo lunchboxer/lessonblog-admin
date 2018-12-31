@@ -1,0 +1,44 @@
+<svelte:head>
+  <title>Orchard: Users</title>
+</svelte:head>
+
+<h2>Users</h2>
+{#if $login}
+
+{#await users}
+<p>Loading users ...</p>
+{:then answer}
+<p>There are {answer.total} users.</p>
+{#each answer.data as user (user._id)}
+<li>{user.username} - created: {datestring(user.createdAt)}</li>
+{/each}
+{:catch error}
+<p>There was an error fetching users: {error}</p>
+{/await}
+{/if}
+
+{#if $showAddUserForm}
+<AddUserForm />
+{:else}
+<button on:click="$set({showAddUserForm: true})">Create a user</button>
+{/if}
+
+<script>
+  import client from '../utils/feathers'
+  export default {
+    data() {
+      return {
+        users: client.service('users').find()
+      }
+    },
+    components: {
+      AddUserForm: '../components/AddUserForm.html'
+    },
+    helpers: {
+      datestring(date) {
+        const d = new Date(date)
+        return d.toDateString()
+      }
+    }
+  }
+</script>

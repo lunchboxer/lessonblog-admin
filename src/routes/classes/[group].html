@@ -8,6 +8,13 @@
   {#if group}
 
   <LessonsLoader {group} />
+
+  {#if $showLessonSummaryForm}
+  <LessonSummaryForm group={group._id} />
+  {:else}
+  <button on:click="$set({showLessonSummaryForm:true})">New lesson summary</button>
+  {/if}
+
   {#if !$lessons}
   <p>Loading classes...</p>
   {:elseif $lessons.total === 0}
@@ -20,8 +27,8 @@
   {/if}
   {/if}
 
-  <!-- {:elseif $groups.length}
-  <p>不好意思，没找到这个班级。</p> -->
+  {:elseif $groups && $groups.length}
+  <p>Could not find "{groupName} class".</p>
   {/if}
 
 </div>
@@ -31,7 +38,8 @@
   export default {
     components: {
       LessonSummary: "../../components/LessonSummary.html",
-      LessonsLoader: "../../components/LessonsLoader.html"
+      LessonsLoader: "../../components/LessonsLoader.html",
+      LessonSummaryForm: "../../components/LessonSummaryForm.html"
     },
     data() {
       return {

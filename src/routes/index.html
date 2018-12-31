@@ -3,6 +3,7 @@
 </svelte:head>
 
 <h2>Classes</h2>
+
 {#if $groups}
 <ul class="classes">
   {#each $groups as group}
@@ -14,6 +15,12 @@
 </ul>
 {:else}
 <p>Loading classes...</p>
+{/if}
+
+{#if $showAddGroupForm}
+<AddGroupForm />
+{:else}
+<button on:click="$set({showAddGroupForm: true})">Add a class</button>
 {/if}
 
 <style>
@@ -32,7 +39,8 @@
 <script>
   export default {
     components: {
-      DeleteGroupButton: '../components/DeleteGroupButton.html'
+      DeleteGroupButton: '../components/DeleteGroupButton.html',
+      AddGroupForm: '../components/AddGroupForm.html'
     }
   }
 </script>
