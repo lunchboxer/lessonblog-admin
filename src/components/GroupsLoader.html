@@ -1,0 +1,10 @@
+<script>
+  import client from '../utils/feathers'
+  export default {
+    oncreate() {
+      client
+        .service("groups").find({ query: { $sort: { name: 1 } } })
+        .then(groups => this.store.set({ groups: groups.data }));
+    }
+  }
+</script>

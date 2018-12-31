@@ -3,39 +3,37 @@
 <a href="/classes/{groupName}">&leftarrow; Back to {groupName} class</a>
 {/if}
 <h2>Edit {groupName} class lesson {lesson.number}</h2>
-<RequireAuth>
 
-  <form novalidate ref:form on:submit="handleSubmit(event)">
-    <fieldset>
-      <label for="numberField">Lesson number</label>
-      <input type="number" bind:value=lesson.number />
+<form novalidate ref:form on:submit="handleSubmit(event)">
+  <fieldset>
+    <label for="numberField">Lesson number</label>
+    <input type="number" bind:value=lesson.number />
 
-      <label for="dateField">Lesson date</label>
-      <input id="dateField" type="date" bind:value=date />
+    <label for="dateField">Lesson date</label>
+    <input id="dateField" type="date" bind:value=date />
 
-      <label for="group-select">Class</label>
-      <select id="group-select" bind:value=lesson.group required>
-        <option value=''></option>
-        {#each $groups as group}
-        <option value={group._id}>{group.name}</option>
-        {/each}
-      </select>
+    <label for="group-select">Class</label>
+    <select id="group-select" bind:value=lesson.group required>
+      <option value=''></option>
+      {#each $groups as group}
+      <option value={group._id}>{group.name}</option>
+      {/each}
+    </select>
 
-      <label for="summaryENField">Lesson summary (English)</label>
-      <textarea bind:value=lesson.summary_EN />
+    <label for="summaryENField">Lesson summary (English)</label>
+    <textarea rows="15" bind:value=lesson.summary_EN />
 
-      <label for="summaryZHField">Lesson summary (Chinese)</label>
-    <textarea bind:value=summary_ZH />
+    <label for="summaryZHField">Lesson summary (Chinese)</label>
+    <textarea rows="15" bind:value=summary_ZH />
     <br>
     <input type="submit" value="Save" class="button" ref:submit />
-    <input type="reset" value="Cancel" class="button button-outline" on:click='set({show:false})' />
+    <input type="reset" value="Cancel" class="button button-outline" on:click='handleCancel(event)' />
     {#if error}
     <br>
     <span class="error">{error}</span>
     {/if}
   </fieldset>
 </form>
-</RequireAuth>
 {/if}
 
 
@@ -43,7 +41,9 @@
 select {
   max-width: 40rem;
 }
-
+textarea {
+  height: auto;
+}
 .error {
   color: red;
 }
@@ -60,9 +60,6 @@ fieldset {
   import client from "../../utils/feathers.js";
   import { goto } from "../../../__sapper__/client.js";
   export default {
-    components: {
-      RequireAuth: "../../components/RequireAuth.html"
-    },
     preload({ params, query }) {
       const { id } = params;
       return { lessonId: id };
@@ -94,6 +91,12 @@ fieldset {
     },
     methods: {
       goto,
+      handleCancel(event) {
+        const { groupName } = this.get()
+        this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+        this.refs && (this.refs.submit.disabled = false)
+        goto(`/classes/${groupName}`)
+      },
       handleSubmit(event) {
         event.preventDefault()
         const isValid = this.refs.form.checkValidity()

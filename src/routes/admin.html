@@ -4,41 +4,37 @@
 
 <h1>Orchard admin</h1>
 
-<RequireAuth>
-  <!-- Just have all these on one page seperate components forms with submit buttons -->
-  {#if $showLessonSummaryForm}
-  <LessonSummaryForm />
-  {:else}
-  <button on:click="$set({showLessonSummaryForm:true})">New lesson summary</button>
-  {/if}
+<!-- Just have all these on one page seperate components forms with submit buttons -->
+{#if $showLessonSummaryForm}
+<LessonSummaryForm />
+{:else}
+<button on:click="$set({showLessonSummaryForm:true})">New lesson summary</button>
+{/if}
 
-  <br>
-  {#if $showNewMaterialForm}
-  <AddMaterialForm />
-  {:else}
-  <button on:click="$set({showNewMaterialForm:true})">New material</button>
-  {/if}
+<br>
+{#if $showNewMaterialForm}
+<AddMaterialForm />
+{:else}
+<button on:click="$set({showNewMaterialForm:true})">New material</button>
+{/if}
 
-  <br>
-  {#if $showAddGroupForm}
-  <AddGroupForm />
-  {:else}
-  <button on:click="$set({showAddGroupForm: true})">Create new class</button>
-  {/if}
+<br>
+{#if $showAddGroupForm}
+<AddGroupForm />
+{:else}
+<button on:click="$set({showAddGroupForm: true})">Create new class</button>
+{/if}
 
-  <br>
-  {#if $showAddUserForm}
-  <AddUserForm />
-  {:else}
-  <button on:click="$set({showAddUserForm: true})">Create a user</button>
-  {/if}
-
-</RequireAuth>
+<br>
+{#if $showAddUserForm}
+<AddUserForm />
+{:else}
+<button on:click="$set({showAddUserForm: true})">Create a user</button>
+{/if}
 
 <script>
   export default {
     components: {
-      RequireAuth: "../components/RequireAuth.html",
       LessonSummaryForm: "../components/LessonSummaryForm.html",
       AddMaterialForm: "../components/AddMaterialForm.html",
       AddGroupForm: "../components/AddGroupForm.html",

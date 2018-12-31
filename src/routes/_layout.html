@@ -1,12 +1,20 @@
+<Header />
 <main>
-  <svelte:component this={child.component} {...child.props} />
+  {#if $user}
+  <GroupsLoader />
+  {/if}
+  {#if $APPNAME}
+  <RequireAuth>
+    <svelte:component this={child.component} {...child.props} />
+  </RequireAuth>
+  {/if}
 </main>
 
 <style>
   main {
     position: relative;
     max-width: 56em;
-    background-color: white;
+    /* background-color: white; */
     padding: 2em;
     margin: 0 auto;
     box-sizing: border-box;
@@ -14,17 +22,20 @@
 </style>
 
 <script>
-
   import client from '../utils/feathers'
   import store from '../utils/store'
+
   export default {
+    components: {
+      GroupsLoader: "../components/GroupsLoader.html",
+      RequireAuth: "../components/RequireAuth.html",
+      Header: "../components/Header.html"
+    },
     store: () => store,
     oncreate() {
-      client.service("groups").find({ query: { $sort: { name: 1 } } }).then(res => this.store.set({ groups: res.data }))
-      client
-        .authenticate()
-        .catch(error => this.store.set({ login: null, user: null }));
+      const auth = client.authenticate().catch(e => this.set({ login: null, user: null }))
       client.on('authenticated', this.authenticatedListener)
+      client.on('logout', this.logoutListener)
     },
     methods: {
       async authenticatedListener(res) {
@@ -32,7 +43,10 @@
         const payload = await client.passport.verifyJWT(res.accessToken)
         const user = await client.service('users').get(payload.userId)
         store.set({ user })
+      },
+      logoutListener() {
+        store.set({ user: null, login: null })
       }
     }
-  };
+  }
 </script>

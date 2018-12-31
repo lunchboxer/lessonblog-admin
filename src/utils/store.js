@@ -3,7 +3,7 @@ import { APPNAME } from './constants.js'
 
 let store = new Store({
   APPNAME,
-  groups: [],
+  groups: null,
   lessons: null,
   user: null,
   login: null,

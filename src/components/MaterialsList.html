@@ -3,7 +3,7 @@
 <p>正在加载材料。。。</p>
 {:then answer}
 {#each answer.images as image (image._id)}
-<MaterialsThumb {image} size=80 />
+<MaterialsThumb {image} size=100 />
 {/each}
 {#each answer.others as material (material._id)}
 <MaterialCard {material} />

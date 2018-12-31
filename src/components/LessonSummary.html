@@ -2,32 +2,24 @@
   <a href="/lessons/{lesson._id}">
     <h3>第{lesson.number}课 - {date}</h3>
   </a>
-  {#if $user}
-  <a class="button button-outline" href="/edit-lesson/{lesson._id}">编辑</a>
+
+  <a class="button button-outline" href="/edit-lesson/{lesson._id}">edit</a>
   <LessonDeleteButton {lesson} />
 
-  <!-- show both for logged in user. if no Chinese show a button to translate -->
-  <p>{lesson.summary_EN}</p>
 
-  {#if lesson.summary_ZH}
-  <p>{lesson.summary_ZH}</p>
+  {@html summary_EN}
+
+  {#if summary_ZH}
+  {@html summary_ZH}
   {:else}
-  <p class="error">这节课还没有翻译成中文的课程内容。</p>
+  <p class="error">This lesson isn't translated into Chinese.</p>
   {/if}
-  {:elseif $locale === 'en-US'}
-  <p>{lesson.summary_EN}</p>
-  {:elseif lesson.summary_ZH}
-  <p>{lesson.summary_ZH}</p>
-  {:else}
-  <!-- if they want chinese but there isn't any, show the english -->
-  <p>这节课还没有翻译成中文的课程内容。</p>
-  <p>{lesson.summary_EN}</p>
-  {/if}
+
 
 
   {#if lesson.materials.length > 0}
   {#if !showMaterials}
-  <button on:click="set({showMaterials: true})">加载材料</button>
+  <button on:click="set({showMaterials: true})">Load materials</button>
   {:else}
   <MaterialsList {lesson} />
   {/if}
@@ -36,10 +28,9 @@
 
 <style>
   .lesson-summary {
-    margin: 2rem 0;
-    padding: 1rem;
-    border: 1px solid #dddddd;
-    border-radius: 1rem;
+    margin: 1rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--base-color);
   }
 
   .error {
@@ -47,6 +38,7 @@
   }
 </style>
 <script>
+  import marked from 'marked'
   export default {
     components: {
       MaterialsList: "./MaterialsList.html",
@@ -65,7 +57,18 @@
       summary: ({ lesson }) => {
         if (lesson.summary_EN.length <= 200) return lesson.summary_EN;
         return lesson.summary_EN.replace(/^(.{200}[^\s]*).*/, "$1") + " ...";
+      },
+      summary_EN: ({ lesson }) => {
+        if (lesson.summary_EN.length === 0) return ''
+        return marked(lesson.summary_EN, { breaks: true })
+      },
+      summary_ZH: ({ lesson }) => {
+        if (lesson.summary_ZH.length === 0) return ''
+        return marked(lesson.summary_ZH, { breaks: true })
       }
+    },
+    methods: {
+      marked
     }
   };
 </script>

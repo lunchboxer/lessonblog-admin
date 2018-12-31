@@ -19,14 +19,14 @@
   export default {
     data() {
       return {
-        size: 80
+        size: 100
       }
     },
     computed: {
       thumbURI: ({ image, size }) => {
         const brokenuri = image.uri.split('/')
         const params = `w_${size},h_${size},c_fit`
-        brokenuri.splice(-2, 1, params)
+        brokenuri.splice(6, 1, params)
         return brokenuri.join('/')
       }
     }

@@ -1,15 +1,21 @@
 <div>
   {#if !confirm}
-  <button class="button-clear" on:click="set({confirm:true})">Delete</button>
+  <span class="bigger" on:click="set({confirm:true})">&times;</span>
   {:else}
-  <button class="button-outline" on:click="set({confirm:false})">Cancel</button>
-  <button class="button-clear" on:click="handleDelete(group)">Confirm delete</button>
+  <span on:click="set({confirm:false})">Cancel</span>
+  &nbsp;/&nbsp;
+  <span on:click="handleDelete(group)">Confirm delete</span>
   {/if}
 </div>
 
 <style>
   div {
-    margin-left: 1rem;
+    margin-left: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .bigger {
+    font-size: 2rem;
   }
 </style>
 

@@ -1,26 +1,31 @@
 <svelte:head>
-  <title>果园英语首页</title>
+  <title>Orchard Admin</title>
 </svelte:head>
 
-<h1>果园英语欢迎您</h1>
-
-<p>请选择班级以查看课程内容。</p>
-{#each $groups as group}
-<li><a href="/classes/{group.name}">{group.name}班</a>
-  {#if $user}
-  <DeleteGroupButton group={group._id} />
-  {/if}
-</li>
+<h2>Classes</h2>
+{#if $groups}
+<ul class="classes">
+  {#each $groups as group}
+  <li class="item">
+    <a href="/classes/{group.name}" class="grouplink">{group.name}</a>
+    <DeleteGroupButton group={group._id} />
+  </li>
+  {/each}
+</ul>
 {:else}
-<p>正在加载班级。。。</p>
-{/each}
+<p>Loading classes...</p>
+{/if}
 
 <style>
-  li {
+  .grouplink {
+    padding: 0.2rem 2rem;
+  }
+
+  li.item {
     display: flex;
     align-items: center;
     list-style: none;
-    font-size: 3rem;
+    font-size: 2.5rem;
   }
 </style>
 

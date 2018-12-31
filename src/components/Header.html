@@ -1,0 +1,56 @@
+<header>
+  <nav>
+    <div class="float-left">
+      <h1>
+        <a href="/">Orchard Admin</a>
+      </h1>
+    </div>
+    <div class="float-right">
+      <span class="menu" on:click="set({showMenu: !showMenu})">
+        <i class="material-icons">menu</i>
+      </span>
+    </div>
+  </nav>
+</header>
+<style>
+  header {
+    width: 100%;
+    background-image: url("tree-sm.png");
+    background-color: var(--primary-color);
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    height: 72px;
+    padding-top: 20px;
+    padding-left: 90px;
+    padding-right: 2rem;
+  }
+
+  nav {
+    font-size: 3rem;
+    color: var(--background);
+  }
+
+  a {
+    color: var(--background);
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .menu {
+    position: absolute;
+    top: 16px;
+    right: 2rem;
+  }
+</style>
+
+<script>
+  export default {
+    data() {
+      return {
+        showMenu: false
+      }
+    }
+  }
+</script>

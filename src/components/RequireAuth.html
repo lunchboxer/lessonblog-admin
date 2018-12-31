@@ -1,6 +1,30 @@
 {#if $login}
 <slot />
 {:else}
-<h2>未登录</h2>
-<p>查看此页请<a href="login">登录</a></p>
+<p>You must log in to continue</p>
+<Login />
 {/if}
+
+<script>
+  import client from '../utils/feathers'
+  export default {
+    components: {
+      Login: '../components/Login.html'
+    },
+    oncreate() {
+      client.authenticate().catch(this.store.set({ login: null, user: null }))
+      client.on('authenticated', async (res) => {
+        this.store.set({ login: res.accessToken })
+        const payload = await client.passport.verifyJWT(res.accessToken)
+        const user = await client.service('users').get(payload.userId)
+        this.store.set({ user })
+      })
+      // client.on('logout', this.logoutListener)
+    },
+    methods: {
+      logoutListener() {
+        store.set({ user: null, login: null })
+      }
+    }
+  }
+</script>

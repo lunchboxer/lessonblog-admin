@@ -1,17 +1,17 @@
 <svelte:head>
-  <title>果园英语：{groupName}班课程内容</title>
+  <title>Orchard：{groupName} class</title>
 </svelte:head>
 
-<h2>{groupName}班课程内容</h2>
+<h2>{groupName} class lessons</h2>
 
 <div class="content">
   {#if group}
 
   <LessonsLoader {group} />
   {#if !$lessons}
-  <p>正在加载课程内容。。。</p>
+  <p>Loading classes...</p>
   {:elseif $lessons.total === 0}
-  <p>还没有输入这个班级的课程内容。</p>
+  <p>There aren't any lesson summaries for this class yet.</p>
   {:else}
   {#if $lessons.data[0].group === group._id}
   {#each $lessons.data as lesson (lesson._id)}
@@ -20,8 +20,8 @@
   {/if}
   {/if}
 
-  {:elseif $groups.length}
-  <p>不好意思，没找到这个班级。</p>
+  <!-- {:elseif $groups.length}
+  <p>不好意思，没找到这个班级。</p> -->
   {/if}
 
 </div>
@@ -48,7 +48,9 @@
       if (group) this.store.set({ group });
     },
     computed: {
-      group: ({ $groups, groupName }) => $groups.find(group => group.name === groupName),
+      group: ({ $groups, groupName }) => {
+        if ($groups) return $groups.find(group => group.name === groupName)
+      },
       topLesson: ({ $lessons }) => {
         if ($lessons && $lessons.total > 0) return $lessons.data[0]._id;
       }

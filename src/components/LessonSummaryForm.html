@@ -1,5 +1,5 @@
 <div class="form-container">
-  <h2>{$_('admin.newLesson')}</h2>
+  <h2>Add lesson summary</h2>
 
   <form novalidate ref:form on:submit="handleSubmit(event)">
     <fieldset>
@@ -18,10 +18,10 @@
       </select>
 
       <label for="summaryENField">Lesson summary (English)</label>
-      <textarea bind:value=summary_EN />
+      <textarea rows="15" bind:value=summary_EN />
 
       <label for="summaryZHField">Lesson summary (Chinese)</label>
-      <textarea bind:value=summary_ZH />
+      <textarea rows="15" bind:value=summary_ZH />
       <br>
       <input type="submit" value="Save" class="button" ref:submit />
       <input type="reset" value="Cancel" class="button button-outline" on:click="$set({showLessonSummaryForm: false})" />
@@ -36,6 +36,9 @@
 <style>
   select {
     max-width: 40rem;
+  }
+  textarea {
+    height: auto;
   }
 
   .error {

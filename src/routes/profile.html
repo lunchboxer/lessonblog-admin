@@ -2,40 +2,36 @@
   <title>Orchard: My profile</title>
 </svelte:head>
 
-<h1>My profile</h1>
+<h2>My profile</h2>
 
-<RequireAuth>
-  {#if !$user}
-  <p>Loading user...</p>
-  {:else}
-  <table>
-    <tbody>
-      <tr>
-        <td>Username</td>
-        <td>{$user.username}</td>
-      </tr>
-      <tr>
-        <td>User ID</td>
-        <td>{$user._id}</td>
-      </tr>
-      <tr>
-        <td>Created</td>
-        <td>{createdDate}</td>
-      </tr>
-      <tr>
-        <td>Updated</td>
-        <td>{updatedDate}</td>
-      </tr>
-    </tbody>
-  </table>
-  {/if}
-</RequireAuth>
+{#if !$user}
+<p>Loading user...</p>
+{:else}
+<table>
+  <tbody>
+    <tr>
+      <td>Username</td>
+      <td>{$user.username}</td>
+    </tr>
+    <tr>
+      <td>User ID</td>
+      <td>{$user._id}</td>
+    </tr>
+    <tr>
+      <td>Created</td>
+      <td>{createdDate}</td>
+    </tr>
+    <tr>
+      <td>Updated</td>
+      <td>{updatedDate}</td>
+    </tr>
+  </tbody>
+</table>
+{/if}
+
 
 <script>
   export default {
-    components: {
-      RequireAuth: "../components/RequireAuth.html"
-    },
     computed: {
       createdDate: ({ $user }) => {
         if ($user) {
