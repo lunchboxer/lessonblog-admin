@@ -13,8 +13,6 @@
   <Login />
   {/if}
 
-
-
 </main>
 
 <style>
@@ -57,10 +55,13 @@
       logoutListener() {
         store.set({ user: null, login: null, authStatus: 'loggedOut' })
       },
-      authenticate() {
-        client.authenticate().then(res => {
+      async authenticate() {
+        try {
+          const res = await client.authenticate()
           this.store.set({ login: res.accessToken, authStatus: 'loggedIn' })
-        }).catch(this.store.set({ login: null, user: null, authStatus: 'loggedOut' }))
+        } catch (e) {
+          this.store.set({ login: null, user: null, authStatus: 'loggedOut' })
+        }
       }
     }
   }

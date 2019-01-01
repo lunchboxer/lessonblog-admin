@@ -11,7 +11,7 @@ let store = new Store({
   showNewMaterialForm: false,
   showAddGroupForm: false,
   showCreateNewUserForm: false,
-  authStatus: null,
+  authStatus: null
 })
 
 export default store
