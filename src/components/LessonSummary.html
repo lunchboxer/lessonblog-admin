@@ -1,6 +1,7 @@
 <div class="lesson-summary">
   <a href="/lessons/{lesson._id}">
-    <h3>第{lesson.number}课 - {date}</h3>
+    <h3>Lesson {lesson.number}</h3>
+    <p>{date}</p>
   </a>
 
   <a class="button button-outline" href="/edit-lesson/{lesson._id}">edit</a>
@@ -52,7 +53,7 @@
     computed: {
       date: ({ lesson, $locale }) => {
         const lessonDate = new Date(lesson.date);
-        return lessonDate.toLocaleDateString($locale);
+        return lessonDate.toDateString();
       },
       summary: ({ lesson }) => {
         if (lesson.summary_EN.length <= 200) return lesson.summary_EN;
