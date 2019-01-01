@@ -59,7 +59,6 @@
 
 <script>
   import client from '../utils/feathers.js'
-  import { goto } from "../../__sapper__/client.js";
 
   export default {
     data() {
@@ -82,7 +81,6 @@
       }
     },
     methods: {
-      goto,
       handleSubmit(event) {
         event.preventDefault()
         const isValid = this.refs.form.checkValidity()
@@ -97,7 +95,6 @@
             this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
             this.refs && (this.refs.submit.disabled = false)
             this.store.set({ showLessonSummaryForm: false })
-            this.goto(`/classes/${groupName}`)
           })
           .catch(error => {
             this.refs && (this.refs.submit.disabled = false)

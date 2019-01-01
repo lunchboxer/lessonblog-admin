@@ -3,10 +3,21 @@
   export default {
     oncreate() {
       const { group } = this.get();
-      client
+      this.sublessons = client
         .service("lessons")
+        .watch()
         .find({ query: { group: group._id, $sort: { number: -1 } } })
-        .then(lessons => this.store.set({ lessons }));
+        .subscribe(lessons => this.store.set({ lessons }));
+    },
+    ondestroy() {
+      this.sublessons.unsubscribe
+    },
+    methods: {
+      sorter() {
+        return (a, b) => {
+          return b.number > a.number
+        }
+      }
     }
   };
 </script>

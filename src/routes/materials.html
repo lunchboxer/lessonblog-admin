@@ -1,0 +1,58 @@
+<svelte:head>
+  <title>Orchard: Materials</title>
+</svelte:head>
+
+<h1>Materials</h1>
+
+<br>
+{#if $showNewMaterialForm}
+<AddMaterialForm />
+{:else}
+<button on:click="$set({showNewMaterialForm:true})">New material</button>
+{/if}
+
+{#if materials}
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Notes</th>
+      <th>Type</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each materials as material (material._id)}
+    <tr>
+      <td><a href="{material.uri}">{material.title}</a></td>
+      <td>{material.notes}</td>
+      <td>{material.type}</td>
+      <td>edit / delete</td>
+    </tr>
+    {/each}
+  </tbody>
+</table>
+{/if}
+
+<script>
+  import client from '../utils/feathers'
+  export default {
+    data() {
+      return {
+        materials: null
+      }
+    },
+    components: {
+      AddMaterialForm: "../components/AddMaterialForm.html",
+    },
+    oncreate() {
+      this.submaterials = client.service('materials').watch()
+        .find().subscribe(materials => {
+          this.set({ materials: materials.data })
+        })
+    },
+    ondestroy() {
+      this.submaterials.unsubscribe()
+    }
+  };
+</script>
