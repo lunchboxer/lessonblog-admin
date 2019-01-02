@@ -3,6 +3,9 @@
 
   <form novalidate ref:form on:submit="handleSubmit(event)">
     <fieldset>
+      <label for="titleField">Lesson title</label>
+      <input type="text" bind:value=title />
+
       <label for="numberField">Lesson number</label>
       <input type="number" bind:value=number />
 
@@ -12,9 +15,13 @@
       <label for="group-select">Class</label>
       <select id="group-select" bind:value=group required>
         <option value=''></option>
+        {#if $groups && $groups.length}
         {#each $groups as group}
         <option value={group._id}>{group.name}</option>
         {/each}
+        {:else}
+        <option value=''>Loading groups...</option>
+        {/if}
       </select>
 
       <label for="summaryENField">Lesson summary (English)</label>
@@ -69,11 +76,12 @@
         number: '',
         summary_EN: '',
         summary_ZH: '',
+        title: ''
       }
     },
     computed: {
       groupName: ({ group, $groups }) => {
-        if (!group || !$groups.length) return
+        if (!group || !$groups) return
         const thisgroup = $groups.find(one => one._id === group)
         if (thisgroup) {
           return thisgroup.name
@@ -86,13 +94,13 @@
         const isValid = this.refs.form.checkValidity()
         if (!isValid) return
         this.refs.submit.disabled = true
-        const { number, date, summary_EN, summary_ZH, groupName } = this.get()
+        const { number, date, summary_EN, summary_ZH, groupName, title } = this.get()
         const group = this.get().group || null
         client
           .service("lessons")
-          .create({ group, number, date, summary_EN, summary_ZH })
+          .create({ group, number, date, summary_EN, summary_ZH, title })
           .then(() => {
-            this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+            this.set({ title: '', error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
             this.refs && (this.refs.submit.disabled = false)
             this.store.set({ showLessonSummaryForm: false })
           })

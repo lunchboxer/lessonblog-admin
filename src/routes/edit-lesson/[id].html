@@ -1,11 +1,14 @@
 {#if lesson}
 {#if groupName}
 <a href="/classes/{groupName}">&leftarrow; Back to {groupName} class</a>
-{/if}
 <h2>Edit {groupName} class lesson {lesson.number}</h2>
+{/if}
 
 <form novalidate ref:form on:submit="handleSubmit(event)">
   <fieldset>
+    <label for="titleField">Lesson title</label>
+    <input type="text" bind:value=title />
+
     <label for="numberField">Lesson number</label>
     <input type="number" bind:value=lesson.number />
 
@@ -15,13 +18,17 @@
     <label for="group-select">Class</label>
     <select id="group-select" bind:value=lesson.group required>
       <option value=''></option>
+      {#if $groups}
       {#each $groups as group}
       <option value={group._id}>{group.name}</option>
       {/each}
+      {:else}
+      <option value=''>Loading groups...</option>
+      {/if}
     </select>
 
     <label for="summaryENField">Lesson summary (English)</label>
-    <textarea rows="15" bind:value=lesson.summary_EN />
+    <textarea rows="15" bind:value=summary_EN />
 
     <label for="summaryZHField">Lesson summary (Chinese)</label>
     <textarea rows="15" bind:value=summary_ZH />
@@ -69,14 +76,16 @@ fieldset {
         .service("lessons")
         .get(this.get().lessonId)
         .then(lesson => {
-          const summary_ZH = !lesson.summary_ZH ? '' : lesson.summary_ZH
+          const summary_ZH = lesson.summary_ZH ? lesson.summary_ZH : ''
+          const summary_EN = lesson.summary_EN ? lesson.summary_EN : ''
+          const title = !lesson.title ? '' : lesson.title
           const date = lesson.date.slice(0, 10)
-          this.set({ lesson, summary_ZH, date })
+          this.set({ lesson, summary_ZH, summary_EN, title, date })
         });
     },
     computed: {
       groupName: ({ lesson, $groups }) => {
-        if (!lesson || !$groups.length) return
+        if (!lesson || !$groups) return
         const group = $groups.find(group => group._id === lesson.group)
         if (group) return group.name
       }
@@ -86,6 +95,8 @@ fieldset {
         lesson: null,
         error: '',
         summary_ZH: '',
+        summary_EN: '',
+        title: '',
         date: ''
       }
     },
@@ -93,7 +104,7 @@ fieldset {
       goto,
       handleCancel(event) {
         const { groupName } = this.get()
-        this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+        this.set({ error: '', show: false, title: '', group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
         this.refs && (this.refs.submit.disabled = false)
         goto(`/classes/${groupName}`)
       },
@@ -102,13 +113,13 @@ fieldset {
         const isValid = this.refs.form.checkValidity()
         if (!isValid) return
         this.refs.submit.disabled = true
-        const { date, summary_ZH, lesson, groupName } = this.get()
-        const { group, number, summary_EN } = lesson
+        const { date, summary_ZH, summary_EN, title, lesson, groupName } = this.get()
+        const { group, number } = lesson
         client
           .service("lessons")
-          .patch(lesson._id, { date, summary_ZH, number, summary_EN, group })
+          .patch(lesson._id, { date, title, summary_ZH, number, summary_EN, group })
           .then(() => {
-            this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '' })
+            this.set({ error: '', show: false, group: '', number: '', date: '', summary_EN: '', summary_ZH: '', title: '' })
             this.refs && (this.refs.submit.disabled = false)
             goto(`/classes/${groupName}`)
           })
