@@ -3,7 +3,11 @@
   <td>{material.type}</td>
   <td on:click="set({open: !open})" class="expand">
     <i class="material-icons">
-      {#if open} expand_less {:else} expand_more {/if}
+      {#if open}
+      expand_less
+      {:else}
+      expand_more
+      {/if}
     </i>
   </td>
 </tr>
@@ -13,13 +17,16 @@
     <p><a href="{material.uri}">URI: {material.uri}</a></p>
     {#if material.notes}
     <p>Notes: {material.notes}</p>
-    {/if} {#if simpletype === 'video'}
+    {/if}
+    {#if simpletype === 'video'}
     <video controls crossorigin playsinline>
       <source src="{material.uri}" type="{material.type}" />
     </video>
     {:elseif simpletype === 'audio'}
-    <audio controls src="{material.uri}"></audio> {:elseif simpletype ===
-    'image'} <img src="{material.uri}" alt="{material.title}" /> {/if}
+    <audio controls src="{material.uri}"></audio>
+    {:elseif simpletype === 'image'}
+    <img src="{material.uri}" alt="{material.title}" />
+    {/if}
 
     <h3>Related Lessons</h3>
     {#await lessons}
@@ -28,11 +35,12 @@
     <p>{answer.total} lessons</p>
     {#each answer.data as lesson (lesson._id)}
     <li>
-      <a href="/lessons/{lesson._id}"
-        >{group(lesson, $groups).name} class lesson {lesson.number}</a
-      >
+      <a href="/lessons/{lesson._id}">
+        {group(lesson, $groups).name} class lesson {lesson.number}
+      </a>
     </li>
-    {/each} {:catch error}
+    {/each}
+    {:catch error}
     <p>Couldn't fetch related lessons: {error}</p>
     {/await}
   </td>
@@ -43,6 +51,7 @@
   tr.open td {
     border: none;
   }
+
   .expand {
     cursor: pointer;
   }
@@ -59,14 +68,7 @@
       simpletype: ({ material }) => {
         if (!material.type) return "";
         return material.type.split("/")[0];
-      },
-      thumbURI: ({ material, simpletype }) => {
-        if (simpletype !== "image") return "";
-        const brokenuri = material.uri.split("/");
-        const params = "w_80,h_80,c_fit";
-        brokenuri.splice(-2, 1, params);
-        return brokenuri.join("/");
-      },
+      }
       lessons: ({ material }) =>
         client.service("lessons").find({ query: { materials: material._id } })
     },
