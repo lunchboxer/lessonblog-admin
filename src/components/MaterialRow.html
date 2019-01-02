@@ -17,28 +17,30 @@
     {#if material.notes}
     <p>Notes: {material.notes}</p>
     {/if}
-    {#if simpletype === 'video'}
-    <video controls crossorigin playsinline>
-      <source src="{material.uri}" type="{material.type}" />
-    </video>
-    {:elseif simpletype === 'audio'}
-    <audio controls src="{material.uri}"></audio>
-    {:elseif simpletype === 'image'}
-    <img src="{material.uri}" alt="{material.title}" />
-    {/if}
 
-    <h3>Related Lessons</h3>
-    <AddMaterialToLesson material={material._id} />
+    <div class="media">
+      {#if simpletype==='video' } <video controls crossorigin playsinline>
+        <source src="{material.uri}" type="{material.type}" />
+      </video>
+      {:elseif simpletype === 'audio'}
+      <audio controls src="{material.uri}"></audio>
+      {:elseif simpletype === 'image'}
+      <img src="{material.uri}" alt="{material.title}" />
+      {/if}
+    </div>
+
+    <h3>{lessons && lessons.total} Related Lessons</h3>
     {#if lessons}
-    <p>{lessons.total} lessons</p>
     {#each lessons.data as lesson (lesson._id)}
     <li>
       <a href="/lessons/{lesson._id}">
         {group(lesson, $groups).name} class lesson {lesson.number}
       </a>
+      <RemoveMaterialFromLesson lesson={lesson._id} material={material._id} />
     </li>
     {/each}
     {/if}
+    <AddMaterialToLesson material={material._id} />
   </td>
 </tr>
 {/if}
@@ -46,6 +48,10 @@
 <style>
   tr.open td {
     border: none;
+  }
+
+  .media {
+    margin-bottom: 1rem;
   }
 
   .expand {
@@ -66,7 +72,8 @@
       this.sublessons.unsubscribe()
     },
     components: {
-      AddMaterialToLesson: './AddMaterialToLesson.html'
+      AddMaterialToLesson: './AddMaterialToLesson.html',
+      RemoveMaterialFromLesson: './RemoveMaterialFromLesson.html'
     },
     data() {
       return {

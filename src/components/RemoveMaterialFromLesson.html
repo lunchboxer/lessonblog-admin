@@ -1,0 +1,36 @@
+{#if !showConfirm}
+<span on:click="set({showConfirm: true})" class="leftmost">&times;</span>
+{:else}
+<span class="leftmost" on:click="set({showConfirm: false})">cancel removal /&nbsp;</span><span on:click="handleRemove()">remove</span>
+{/if}
+
+<style>
+  span {
+    cursor: pointer;
+  }
+
+  span.leftmost {
+    padding-left: 1rem;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers'
+  export default {
+    data() {
+      return {
+        showConfirm: false
+      }
+    },
+    methods: {
+      async handleRemove() {
+        const { material, lesson } = this.get()
+        try {
+          const res = await client.service('lessons').patch(lesson, { materials: [material] }, { query: { pull: true } })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }
+  }
+</script>

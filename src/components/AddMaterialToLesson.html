@@ -41,6 +41,11 @@
   select {
     max-width: 20rem;
   }
+
+  input,
+  select {
+    display: inline;
+  }
 </style>
 
 <script>
@@ -64,9 +69,8 @@
       async handleSubmit(event) {
         event.preventDefault()
         const { lesson, material } = this.get()
-        console.log(material)
         try {
-          const res = await client.service('lessons').patch(lesson, { materials: [material] }, { push: true })
+          const res = await client.service('lessons').patch(lesson, { materials: [material] }, { query: { push: true } })
           this.handleCancel()
         } catch (e) {
           console.log(e)
