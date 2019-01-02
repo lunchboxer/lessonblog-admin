@@ -1,5 +1,5 @@
 <tr class="{open ? 'open' : ''}">
-  <td>{material.title}</td>
+  <td><a href="{material.uri}">{material.title}</a></td>
   <td>{material.type}</td>
   <td on:click="set({open: !open})" class="expand">
     <i class="material-icons">
@@ -14,7 +14,6 @@
 {#if open}
 <tr class="details">
   <td colspan="3">
-    <p><a href="{material.uri}">URI: {material.uri}</a></p>
     {#if material.notes}
     <p>Notes: {material.notes}</p>
     {/if}
@@ -58,6 +57,7 @@
 </style>
 
 <script>
+  import client from '../utils/feathers'
   export default {
     data() {
       return {
