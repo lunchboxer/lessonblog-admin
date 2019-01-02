@@ -58,9 +58,12 @@
   export default {
     oncreate() {
       const { material } = this.get()
-      client.service("lessons").watch().find({ query: { materials: material._id } }).subscribe(lessons => {
+      this.sublessons = client.service("lessons").watch().find({ query: { materials: material._id } }).subscribe(lessons => {
         this.set({ lessons })
       })
+    },
+    ondestroy() {
+      this.sublessons.unsubscribe()
     },
     components: {
       AddMaterialToLesson: './AddMaterialToLesson.html'
