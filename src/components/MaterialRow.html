@@ -68,7 +68,7 @@
       simpletype: ({ material }) => {
         if (!material.type) return "";
         return material.type.split("/")[0];
-      }
+      },
       lessons: ({ material }) =>
         client.service("lessons").find({ query: { materials: material._id } })
     },
