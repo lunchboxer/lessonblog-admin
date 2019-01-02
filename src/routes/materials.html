@@ -16,19 +16,13 @@
   <thead>
     <tr>
       <th>Title</th>
-      <th>Notes</th>
       <th>Type</th>
-      <th>Action</th>
+      <th>Show</th>
     </tr>
   </thead>
   <tbody>
     {#each materials as material (material._id)}
-    <tr>
-      <td><a href="{material.uri}">{material.title}</a></td>
-      <td>{material.notes}</td>
-      <td>{material.type}</td>
-      <td>edit / delete</td>
-    </tr>
+   <MaterialRow {material} />
     {/each}
   </tbody>
 </table>
@@ -44,6 +38,7 @@
     },
     components: {
       AddMaterialForm: "../components/AddMaterialForm.html",
+      MaterialRow: '../components/MaterialRow.html'
     },
     oncreate() {
       this.submaterials = client.service('materials').watch()
