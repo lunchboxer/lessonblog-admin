@@ -1,0 +1,81 @@
+{#if showForm}
+<h4>Add to a lesson</h4>
+<form novalidate ref:form on:submit="handleSubmit(event)">
+  <label for="group-select">Class</label>
+  <select id="group-select" bind:value=group required>
+    {#if $groups && $groups.length}
+    <option value=''>--</option>
+    {#each $groups as group}
+    <option value={group._id}>{group.name}</option>
+    {/each}
+    {:else}
+    <option value=''>Loading classes...</option>
+    {/if}
+  </select>
+
+  {#if group}
+  <label for="lesson-select">Lesson</label>
+  <select id="lesson-select" bind:value=lesson required>
+
+    {#await lessons}
+    <option value=''>Loading lessons...</option>
+    {:then answer}
+    <option value=''>--</option>
+    {#each answer.data as lesson}
+    <option value={lesson._id}>#{lesson.number} {lesson.title}</option>
+    {/each}
+    {/await}
+  </select>
+  <br>
+  {#if lesson}
+  <input type="submit" value="Add" class="button" ref:submit />
+  {/if}
+  {/if}
+  <input type="reset" value="Cancel" class="button button-outline" on:click="handleCancel()" />
+</form>
+{:else}
+<button on:click="set({showForm: !showForm})">Add to a lesson</button>
+{/if}
+
+<style>
+  select {
+    max-width: 20rem;
+  }
+</style>
+
+<script>
+  import client from '../utils/feathers'
+  export default {
+    data() {
+      return {
+        showForm: false,
+        group: null,
+        lesson: null,
+        lessons: null
+      }
+    },
+    computed: {
+      lessons: ({ group }) => {
+        if (!group) return null
+        return client.service('lessons').find({ query: { group, $sort: { number: -1 } } })
+      }
+    },
+    methods: {
+      async handleSubmit(event) {
+        event.preventDefault()
+        const { lesson, material } = this.get()
+        console.log(material)
+        try {
+          const res = await client.service('lessons').patch(lesson, { materials: [material] }, { push: true })
+          this.handleCancel()
+        } catch (e) {
+          console.log(e)
+        }
+
+      },
+      handleCancel() {
+        this.set({ showForm: false, lesson: null, group: null })
+      }
+    }
+  }
+</script>

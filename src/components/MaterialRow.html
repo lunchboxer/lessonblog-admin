@@ -28,20 +28,17 @@
     {/if}
 
     <h3>Related Lessons</h3>
-    {#await lessons}
-    <p>Loading related lessons...</p>
-    {:then answer}
-    <p>{answer.total} lessons</p>
-    {#each answer.data as lesson (lesson._id)}
+    <AddMaterialToLesson material={material._id} />
+    {#if lessons}
+    <p>{lessons.total} lessons</p>
+    {#each lessons.data as lesson (lesson._id)}
     <li>
       <a href="/lessons/{lesson._id}">
         {group(lesson, $groups).name} class lesson {lesson.number}
       </a>
     </li>
     {/each}
-    {:catch error}
-    <p>Couldn't fetch related lessons: {error}</p>
-    {/await}
+    {/if}
   </td>
 </tr>
 {/if}
@@ -59,18 +56,26 @@
 <script>
   import client from '../utils/feathers'
   export default {
+    oncreate() {
+      const { material } = this.get()
+      client.service("lessons").watch().find({ query: { materials: material._id } }).subscribe(lessons => {
+        this.set({ lessons })
+      })
+    },
+    components: {
+      AddMaterialToLesson: './AddMaterialToLesson.html'
+    },
     data() {
       return {
-        open: false
+        open: false,
+        lessons: null
       };
     },
     computed: {
       simpletype: ({ material }) => {
         if (!material.type) return "";
         return material.type.split("/")[0];
-      },
-      lessons: ({ material }) =>
-        client.service("lessons").find({ query: { materials: material._id } })
+      }
     },
     helpers: {
       group: (lesson, groups) => {
