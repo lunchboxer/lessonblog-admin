@@ -8,6 +8,7 @@ Assuming you have npm and node, clone this repo then...
 
 ```sh
 npm i
+cp -r node_modules/typeface-roboto assets # we're serving it locally
 npm run dev
 ```
 
