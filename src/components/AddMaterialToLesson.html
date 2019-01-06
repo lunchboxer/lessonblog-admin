@@ -34,12 +34,16 @@
   <input type="reset" value="Cancel" class="button button-outline" on:click="handleCancel()" />
 </form>
 {:else}
-<button on:click="set({showForm: !showForm})">Add to a lesson</button>
+<button class="but" on:click="set({showForm: !showForm})">&plus; Add to a lesson</button>
 {/if}
 
 <style>
   select {
     max-width: 20rem;
+  }
+
+  .but {
+    cursor: pointer;
   }
 
   input,

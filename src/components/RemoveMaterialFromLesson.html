@@ -1,7 +1,7 @@
 {#if !showConfirm}
 <span on:click="set({showConfirm: true})" class="leftmost">&times;</span>
 {:else}
-<span class="leftmost" on:click="set({showConfirm: false})">cancel removal /&nbsp;</span><span on:click="handleRemove()">remove</span>
+<span class="leftmost" on:click="set({showConfirm: false})">cancel&nbsp;/&nbsp;</span><span on:click="handleRemove()">remove</span>
 {/if}
 
 <style>
@@ -26,7 +26,7 @@
       async handleRemove() {
         const { material, lesson } = this.get()
         try {
-          const res = await client.service('lessons').patch(lesson, { materials: [material] }, { query: { pull: true } })
+          client.service('lessons').patch(lesson, { materials: [material] }, { query: { pull: true } })
         } catch (e) {
           console.log(e)
         }

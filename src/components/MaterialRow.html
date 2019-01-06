@@ -1,95 +1,36 @@
-<tr class="{open ? 'open' : ''}">
-  <td><a href="{material.uri}">{material.title}</a></td>
-  <td>{material.type}</td>
-  <td on:click="set({open: !open})" class="expand">
-    <i class="material-icons">
-      {#if open}
-      expand_less
-      {:else}
-      expand_more
-      {/if}
-    </i>
-  </td>
-</tr>
-{#if open}
-<tr class="details">
-  <td colspan="3">
-    {#if material.notes}
-    <p>Notes: {material.notes}</p>
+<a href="/material/{material._id}">
+  <li class="matlistitem">
+    {#if simpletype === 'video'}
+    <i class="material-icons">live_tv</i>
+    {:elseif simpletype === 'image'}
+    <i class="material-icons">image</i>
+    {:elseif simpletype === 'audio'}
+    <i class="material-icons">audiotrack</i>
+    {:else}
+    <i class="material-icons">attachment</i>
     {/if}
 
-    <div class="media">
-      {#if simpletype==='video' } <video controls crossorigin playsinline>
-        <source src="{material.uri}" type="{material.type}" />
-      </video>
-      {:elseif simpletype === 'audio'}
-      <audio controls src="{material.uri}"></audio>
-      {:elseif simpletype === 'image'}
-      <img src="{material.uri}" alt="{material.title}" />
-      {/if}
-    </div>
+    <span>{material.title}</span>
+  </li>
+</a>
 
-    <h3>{lessons && lessons.total} Related Lessons</h3>
-    {#if lessons}
-    {#each lessons.data as lesson (lesson._id)}
-    <li>
-      <a href="/lessons/{lesson._id}">
-        {group(lesson, $groups).name} class lesson {lesson.number}
-      </a>
-      <RemoveMaterialFromLesson lesson={lesson._id} material={material._id} />
-    </li>
-    {/each}
-    {/if}
-    <AddMaterialToLesson material={material._id} />
-  </td>
-</tr>
-{/if}
 
 <style>
-  tr.open td {
-    border: none;
+  li {
+    list-style: none;
   }
 
-  .media {
-    margin-bottom: 2rem;
-  }
-
-  .expand {
-    cursor: pointer;
+  i {
+    font-size: 1.8rem;
   }
 </style>
 
 <script>
-  import client from '../utils/feathers'
   export default {
-    oncreate() {
-      const { material } = this.get()
-      this.sublessons = client.service("lessons").watch().find({ query: { materials: material._id } }).subscribe(lessons => {
-        this.set({ lessons })
-      })
-    },
-    ondestroy() {
-      this.sublessons.unsubscribe()
-    },
-    components: {
-      AddMaterialToLesson: './AddMaterialToLesson.html',
-      RemoveMaterialFromLesson: './RemoveMaterialFromLesson.html'
-    },
-    data() {
-      return {
-        open: false,
-        lessons: null
-      };
-    },
     computed: {
       simpletype: ({ material }) => {
         if (!material.type) return "";
         return material.type.split("/")[0];
-      }
-    },
-    helpers: {
-      group: (lesson, groups) => {
-        if (groups) return groups.find(group => group._id === lesson.group);
       }
     }
   };

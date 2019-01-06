@@ -1,0 +1,105 @@
+{#if material}
+<h2>Material</h2>
+<p>Title: {material.title}</p>
+<p class="truncate">URL:<a href="{material.uri}">{material.uri}</a></p>
+{#if material.notes}
+<p>Notes: {material.notes}</p>
+{/if}
+
+<div class="media">
+  {#if simpletype==='video' } <video controls crossorigin playsinline>
+    <source src="{material.uri}" type="{material.type}" />
+  </video>
+  {:elseif simpletype === 'audio'}
+  <AudioPlayer audio="{material}" />
+  {:elseif simpletype === 'image'}
+  <img src="{material.uri}" alt="{material.title}" />
+  {/if}
+</div>
+
+
+
+<h4>Related Lessons</h4>
+<ul>
+  {#if lessons && lessons.total}
+
+  {#each lessons.data as lesson (lesson._id)}
+  <li>
+    <a href="/lessons/{lesson._id}">
+      {group(lesson, $groups).name} class lesson {lesson.number}
+    </a>
+    <RemoveMaterialFromLesson lesson={lesson._id} material={material._id} />
+  </li>
+  {/each}
+
+  {/if}
+</ul>
+
+<AddMaterialToLesson material={material._id} />
+<button class="button-outline">Edit</button>
+<button class="button-outline">Delete</button>
+{:else}
+<p>Loading material ...</p>
+{/if}
+
+<style>
+  .truncate {
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .media {
+    margin-bottom: 2rem;
+    width: 300px;
+  }
+
+  video {
+    width: 300px;
+  }
+</style>
+
+<script>
+  import client from '../../utils/feathers'
+  export default {
+    preload({ params, query }) {
+      const { id } = params;
+      return { materialId: id };
+    },
+    oncreate() {
+      const { materialId } = this.get()
+      this.material = client.service('materials').watch().get(materialId).subscribe(material => {
+        this.set({ material })
+      })
+      this.sublessons = client.service("lessons").watch().find({ query: { materials: materialId } }).subscribe(lessons => {
+        this.set({ lessons })
+      })
+    },
+    ondestroy() {
+      this.sublessons.unsubscribe()
+    },
+    components: {
+      AddMaterialToLesson: '../../components/AddMaterialToLesson.html',
+      RemoveMaterialFromLesson: '../../components/RemoveMaterialFromLesson.html',
+      AudioPlayer: '../../components/AudioPlayer.html'
+    },
+    data() {
+      return {
+        lessons: null,
+        material: null
+      };
+    },
+    computed: {
+      simpletype: ({ material }) => {
+        if (!material || !material.type) return "";
+        return material.type.split("/")[0];
+      }
+    },
+    helpers: {
+      group: (lesson, groups) => {
+        if (groups) return groups.find(group => group._id === lesson.group);
+      }
+    }
+  };
+</script>

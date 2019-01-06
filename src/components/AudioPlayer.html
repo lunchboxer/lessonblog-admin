@@ -1,0 +1,95 @@
+<audio bind:currentTime=t bind:duration=d bind:paused ref:player>
+  <source type={audio.type} src={audio.uri}>
+</audio>
+<span on:click='set({ paused: !paused })' style="cursor: pointer;">
+  {#if paused}
+  play
+  {:else}
+  pause
+  {/if}
+</span>
+<span class='time elapsed'>{format(t)}</span>/<span class='time duration'>{format(d)}</span>
+<input class="range" type="range" id="seek" max=100 min=0 value={p * 100} on:input="seek(event)" />
+
+<style>
+  .range {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 150px;
+    background: var(--primary-color);
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background: grey;
+    cursor: pointer;
+  }
+
+  /* All the same stuff for Firefox */
+  input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background: grey;
+    cursor: pointer;
+  }
+
+  /* All the same stuff for IE */
+  input[type=range]::-ms-thumb {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background: grey;
+    cursor: pointer;
+  }
+
+  .time {
+    vertical-align: middle;
+  }
+</style>
+
+<script>
+  function pad(num) {
+    return num < 10 ? '0' + num : num;
+  }
+  export default {
+    oncreate() {
+      const plr = this.refs.player
+      this.plrended = plr.addEventListener('ended', () => { this.set({ t: 0 }) })
+    },
+    ondestroy() {
+      this.refs.player.removeEventListener('ended', this.plrended)
+    },
+    data() {
+      return {
+        paused: true,
+        t: 0,
+        d: 0,
+        p: 0
+      }
+    },
+    helpers: {
+      format: time => {
+        if (isNaN(time)) return '--:--.-';
+        var minutes = Math.floor(time / 60);
+        var seconds = (time % 60).toFixed();
+        return minutes + ':' + pad(seconds)
+      }
+    },
+    computed: {
+      p: ({ t, d }) => d ? t / d : 0
+    },
+    methods: {
+      seek(event) {
+        const { paused } = this.get()
+        this.set({ paused: true })
+        const p = event.target.value
+        this.set({ t: p / 100 * this.get().d, paused });
+
+      }
+    }
+  }
+</script>

@@ -2,9 +2,8 @@
   <title>Orchard: Materials</title>
 </svelte:head>
 
-<h1>Materials</h1>
+<h2>Materials</h2>
 
-<br>
 {#if $showNewMaterialForm}
 <AddMaterialForm />
 {:else}
@@ -12,20 +11,13 @@
 {/if}
 
 {#if materials}
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Type</th>
-      <th>Show</th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each materials as material (material._id)}
-   <MaterialRow {material} />
-    {/each}
-  </tbody>
-</table>
+
+<ul>
+  {#each materials as material (material._id)}
+  <MaterialRow {material} />
+  {/each}
+</ul>
+
 {/if}
 
 <script>
