@@ -1,0 +1,23 @@
+<label class="switch">
+  <input type="checkbox" bind:checked='lesson.published' on:input="handlePublish(event)">
+  <span class="slider round">{#if lesson.published}Published{:else}Not published{/if}</span>
+</label>
+
+<style>
+  i {
+    cursor: pointer;
+    font-size: 3rem;
+  }
+</style>
+<script>
+  import client from '../utils/feathers'
+  export default {
+    methods: {
+      handlePublish(event) {
+        const { lesson } = this.get()
+        const published = lesson.published ? false : true
+        client.service('lessons').patch(lesson._id, { published })
+      }
+    }
+  }
+</script>

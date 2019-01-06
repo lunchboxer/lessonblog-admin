@@ -4,6 +4,7 @@
     <p>{date}</p>
   </a>
 
+  <LessonPublishToggle {lesson} />
   <a class="button button-outline" href="/edit-lesson/{lesson._id}">edit</a>
   <LessonDeleteButton {lesson} />
 
@@ -43,7 +44,8 @@
   export default {
     components: {
       MaterialsList: "./MaterialsList.html",
-      LessonDeleteButton: "./LessonDeleteButton.html"
+      LessonDeleteButton: "./LessonDeleteButton.html",
+      LessonPublishToggle: './LessonPublishToggle.html'
     },
     data() {
       return {
