@@ -17,12 +17,7 @@
 
       <br />
       <input type="submit" value="Save" class="button" ref:submit />
-      <input
-        type="reset"
-        value="Cancel"
-        class="button button-outline"
-        on:click="$set({showNewMaterialForm: false})"
-      />
+      <input type="reset" value="Cancel" class="button button-outline" on:click="$set({showNewMaterialForm: false})" />
       {#if error} <br />
       <span class="error">{error}</span> {/if}
     </fieldset>
@@ -36,6 +31,7 @@
 
   .form-container {
     padding: 2rem;
+    margin-bottom: 2rem;
     border: 1px solid #eeeeee;
   }
 
