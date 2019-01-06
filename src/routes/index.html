@@ -3,6 +3,12 @@
 </svelte:head>
 
 <h2>Classes</h2>
+{#if $showAddGroupForm}
+<AddGroupForm />
+{:else}
+<button on:click="$set({showAddGroupForm: true})">Add a class</button>
+{/if}
+
 
 {#if $groups}
 <ul class="classes">
@@ -17,11 +23,7 @@
 <p>Loading classes...</p>
 {/if}
 
-{#if $showAddGroupForm}
-<AddGroupForm />
-{:else}
-<button on:click="$set({showAddGroupForm: true})">Add a class</button>
-{/if}
+
 
 <style>
   .grouplink {
