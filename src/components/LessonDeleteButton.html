@@ -1,12 +1,36 @@
-{#if confirm}
-<button class="button-outline" on:click="handleDelete(lesson._id)">
-  Confirm delete
-</button>
-{:else}
-<button class="button-outline" on:click="set({confirm:true})">
-  Delete
-</button>
-{/if}
+<div class="unit">
+  {#if confirm}
+  <span class="warning">Really delete?&nbsp;</span>
+  <span class="but" on:click="handleDelete(lesson._id)">yes</span>
+  &nbsp;/&nbsp;
+  <span class="but" on:click="set({confirm:false})">no</span>
+  {:else}
+  <i class="material-icons" on:click="set({confirm:true})">
+    delete
+  </i>
+  {/if}
+</div>
+
+
+<style>
+  i {
+    cursor: pointer;
+  }
+
+  .but {
+    cursor: pointer;
+  }
+
+  .unit {
+    padding: 1rem;
+    display: flex;
+    align-content: center;
+  }
+
+  .warning {
+    color: red;
+  }
+</style>
 
 <script>
   import client from "../utils/feathers.js";

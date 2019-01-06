@@ -1,12 +1,16 @@
 <div class="lesson-summary">
-  <a href="/lessons/{lesson._id}">
-    <h3>Lesson {lesson.number} - {lesson.title}</h3>
-    <p>{date}</p>
-  </a>
+  <div class="toprow">
+    <a href="/lessons/{lesson._id}">
+      <h3>Lesson {lesson.number} - {lesson.title}</h3>
+    </a>
+    <div class="buttons">
+      <LessonPublishToggle {lesson} />
+      <i class="material-icons" on:click="goto('/edit-lesson/'+ lesson._id)">edit</i>
+      <LessonDeleteButton {lesson} />
+    </div>
 
-  <LessonPublishToggle {lesson} />
-  <a class="button button-outline" href="/edit-lesson/{lesson._id}">edit</a>
-  <LessonDeleteButton {lesson} />
+  </div>
+  <p>{date}</p>
 
 
   {@html summary_EN}
@@ -29,10 +33,31 @@
 </div>
 
 <style>
+  h3 {
+    margin-bottom: 0;
+  }
+
+  .buttons {
+    display: flex;
+  }
+
+  .buttons i {
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  .toprow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   .lesson-summary {
     margin: 1rem 0;
     padding: 1rem 0;
     border-top: 1px solid var(--base-color);
+    width: 100%;
   }
 
   .error {
@@ -41,6 +66,7 @@
 </style>
 <script>
   import marked from 'marked'
+  import { goto } from "../../__sapper__/client.js";
   export default {
     components: {
       MaterialsList: "./MaterialsList.html",
@@ -71,7 +97,7 @@
       }
     },
     methods: {
-      marked
+      marked, goto
     }
   };
 </script>

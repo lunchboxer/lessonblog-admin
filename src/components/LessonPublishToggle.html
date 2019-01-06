@@ -1,21 +1,25 @@
-<label class="switch">
+<!-- <label class="switch">
   <input type="checkbox" bind:checked='lesson.published' on:input="handlePublish(event)">
   <span class="slider round">{#if lesson.published}Published{:else}Not published{/if}</span>
-</label>
+</label> -->
+{#if lesson.published}
+<i class="material-icons" on:click="handlePublish(false)">check_box</i>
+{:else}
+<i class="material-icons" on:click="handlePublish(true)">check_box_outline_blank</i>
+{/if}
 
 <style>
   i {
+    padding: 1rem;
     cursor: pointer;
-    font-size: 3rem;
   }
 </style>
 <script>
   import client from '../utils/feathers'
   export default {
     methods: {
-      handlePublish(event) {
+      handlePublish(published) {
         const { lesson } = this.get()
-        const published = lesson.published ? false : true
         client.service('lessons').patch(lesson._id, { published })
       }
     }
