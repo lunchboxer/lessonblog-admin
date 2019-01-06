@@ -36,7 +36,7 @@
 </ul>
 
 <AddMaterialToLesson material={material._id} />
-<button class="button-outline">Edit</button>
+<a href="/edit-material/{material._id}" class="button button-outline">Edit</a>
 <DeleteMaterial material={material._id} />
 {:else}
 <p>Loading material ...</p>

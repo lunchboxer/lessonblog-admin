@@ -1,0 +1,83 @@
+<h2>Edit material</h2>
+{#if material}
+<form novalidate ref:form on:submit="handleSubmit(event)">
+  <fieldset>
+    <label for="uriField">URI</label>
+    <input id="uriField" type="text" bind:value="material.uri" />
+
+    <label for="titleField">Title</label>
+    <input id="titleField" type="text" bind:value="material.title" />
+
+    <label for="typeField">File-type</label>
+    <input id="typeField" type="text" bind:value="material.type" />
+
+    <label for="notesField">Notes</label>
+    <input id="notesField" type="text" bind:value="material.notes" />
+
+    <br />
+    <input type="submit" value="Save" class="button" ref:submit />
+    <input type="reset" value="Cancel" class="button button-outline" on:click="goto('/material/' + materialId)" />
+    {#if error} <br />
+    <span class="error">{error}</span> {/if}
+  </fieldset>
+</form>
+
+{:else}
+<p>Loading material...</p>
+{/if}
+
+<style>
+  .error {
+    color: red;
+  }
+
+  form,
+  fieldset {
+    padding: 0;
+    margin: 0;
+  }
+</style>
+
+<script>
+  import client from '../../utils/feathers'
+  import { goto } from "../../../__sapper__/client.js";
+  export default {
+    preload({ params, query }) {
+      const { id } = params;
+      return { materialId: id };
+    },
+    oncreate() {
+      const { materialId } = this.get()
+      client.service('materials').get(materialId).then(material => {
+        this.set({ material })
+      })
+    },
+    data() {
+      return {
+        material: null,
+        error: ''
+      };
+    },
+    methods: {
+      goto,
+      handleSubmit(event) {
+        event.preventDefault()
+        const isValid = this.refs.form.checkValidity();
+        if (!isValid) return;
+        this.refs.submit.disabled = true;
+        const { uri, type, notes, title, _id } = this.get().material
+        client
+          .service("materials")
+          .patch(_id, { uri, title, type, notes })
+          .then(() => {
+            this.refs && (this.refs.submit.disabled = false);
+            goto('/material/' + _id)
+          })
+          .catch(error => {
+            this.refs && (this.refs.submit.disabled = false);
+            this.set({ error: error.message });
+          });
+      }
+    }
+  };
+</script>
