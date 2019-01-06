@@ -1,6 +1,6 @@
-<h4>材料</h4>
+<h4>Materials</h4>
 {#await materials}
-<p>正在加载材料。。。</p>
+<p>Loading materials...</p>
 {:then answer}
 {#each answer.images as image (image._id)}
 <MaterialsThumb {image} size=100 />
@@ -9,7 +9,7 @@
 <MaterialCard {material} />
 {/each}
 {:catch}
-<p>加载材料失败了。</p>
+<p>Loading materials failed.</p>
 {/await}
 
 <script>

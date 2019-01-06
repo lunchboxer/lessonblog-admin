@@ -1,10 +1,10 @@
 {#if lesson}
 {#if groupName}
-<a href="/classes/{groupName}">&leftarrow; 回到{groupName}班</a>
+<a href="/classes/{groupName}">&leftarrow; Back to {groupName} class</a>
 {/if}
 <LessonSummary lesson={lesson} />
 {:else}
-<p>正在加载课程内容。。。</p>
+<p>Loading lesson information...</p>
 {/if}
 
 <script>
