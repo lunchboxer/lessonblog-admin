@@ -1,0 +1,25 @@
+{#if confirm}
+<p>Are you sure you want to delete this material?</p>
+<button class="button-outline" on:click="set({confirm:false})">Nevermind</button>
+<button class="button-outline" on:click="handleDelete(material)">Really Delete</button>
+{:else}
+<button class="button-outline" on:click="set({confirm:true})">Delete</button>
+{/if}
+
+<script>
+  import client from '../utils/feathers'
+  import { goto } from "../../__sapper__/client.js";
+  export default {
+    data() {
+      return {
+        confirm: false
+      }
+    },
+    methods: {
+      goto,
+      handleDelete(id) {
+        client.service('materials').remove(id).then(goto('/materials'))
+      }
+    }
+  }
+</script>

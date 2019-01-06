@@ -37,7 +37,7 @@
 
 <AddMaterialToLesson material={material._id} />
 <button class="button-outline">Edit</button>
-<button class="button-outline">Delete</button>
+<DeleteMaterial material={material._id} />
 {:else}
 <p>Loading material ...</p>
 {/if}
@@ -82,7 +82,8 @@
     components: {
       AddMaterialToLesson: '../../components/AddMaterialToLesson.html',
       RemoveMaterialFromLesson: '../../components/RemoveMaterialFromLesson.html',
-      AudioPlayer: '../../components/AudioPlayer.html'
+      AudioPlayer: '../../components/AudioPlayer.html',
+      DeleteMaterial: '../../components/DeleteMaterial.html'
     },
     data() {
       return {
