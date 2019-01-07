@@ -1,23 +1,31 @@
-<audio bind:currentTime=t bind:duration=d bind:paused ref:player>
-  <source type={audio.type} src={audio.uri}>
-</audio>
-<span on:click='set({ paused: !paused })' style="cursor: pointer;">
-  {#if paused}
-  play
-  {:else}
-  pause
-  {/if}
-</span>
-<span class='time elapsed'>{format(t)}</span>/<span class='time duration'>{format(d)}</span>
-<input class="range" type="range" id="seek" max=100 min=0 value={p * 100} on:input="seek(event)" />
+<div class="audioplayer">
+  <audio bind:currentTime=t bind:duration=d bind:paused ref:player>
+    <source type={audio.type} src={audio.uri}>
+  </audio>
+  <i on:click='set({ paused: !paused })' class="material-icons playpause">
+    {#if paused}
+    play_arrow
+    {:else}
+    pause
+    {/if}
+  </i>&nbsp;
+  <span class='time elapsed'>{format(t)}</span>/<span class='time duration'>{format(d)}</span>
+  <input class="range" type="range" id="seek" max=100 min=0 value={p * 100} on:input="seek(event)" />
+</div>
 
 <style>
+  .audioplayer {
+    display: flex;
+    align-items: center;
+  }
+
   .range {
     -webkit-appearance: none;
     height: 1rem;
-    width: 150px;
+    width: 180px;
     background: var(--primary-color);
     cursor: pointer;
+    margin: 1rem;
   }
 
   input[type=range]::-webkit-slider-thumb {
@@ -26,6 +34,7 @@
     width: 1rem;
     background: grey;
     cursor: pointer;
+    border-radius: 0;
   }
 
   /* All the same stuff for Firefox */
@@ -35,6 +44,7 @@
     width: 1rem;
     background: grey;
     cursor: pointer;
+    border-radius: 0;
   }
 
   /* All the same stuff for IE */
@@ -43,6 +53,12 @@
     height: 1rem;
     width: 1rem;
     background: grey;
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .playpause {
+    padding: 0.5rem;
     cursor: pointer;
   }
 
