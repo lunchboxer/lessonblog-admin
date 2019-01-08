@@ -5,6 +5,7 @@ let store = new Store({
   APPNAME,
   groups: null,
   lessons: null,
+  materials: null,
   user: null,
   login: null,
   showLessonSummaryForm: false,

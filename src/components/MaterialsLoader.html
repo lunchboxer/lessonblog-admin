@@ -1,0 +1,20 @@
+<script>
+  import client from '../utils/feathers'
+  export default {
+    data() {
+      return {
+        limit: 50
+      }
+    },
+    oncreate() {
+      const { limit } = this.get()
+      this.submaterials = client.service('materials').watch()
+        .find({ query: { $limit: limit, $sort: { title: 1 } } }).subscribe(materials => {
+          this.store.set({ materials: materials })
+        })
+    },
+    ondestroy() {
+      this.submaterials.unsubscribe()
+    }
+  }
+</script>

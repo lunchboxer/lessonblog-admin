@@ -2,44 +2,56 @@
   <title>Orchard: Materials</title>
 </svelte:head>
 
-<h2>Materials</h2>
+<MaterialsLoader {limit} />
 
+<h2>Materials</h2>
 {#if $showNewMaterialForm}
 <AddMaterialForm />
 {:else}
 <button on:click="$set({showNewMaterialForm:true})">New material</button>
 {/if}
 
-{#if materials}
-
+{#if !$materials}
+<p>Loading materials (page {$page})...</p>
+{:elseif $materials.total === 0}
+<p>There aren't any materials to show yet.</p>
+{:else}
+<Paginator total="{$materials.total}" page="{$page}" {limit} />
 <ul>
-  {#each materials as material (material._id)}
+  {#each $materials.data as material (material._id)}
   <MaterialRow {material} />
   {/each}
 </ul>
-
 {/if}
+
+<style>
+  ul {
+    margin-top: 1rem;
+  }
+</style>
 
 <script>
   import client from '../utils/feathers'
   export default {
     data() {
       return {
-        materials: null
+        page: 1,
+        limit: 50
       }
+    },
+    preload({ params, query }) {
+      const page = query.page || 1
+      return { page };
     },
     components: {
       AddMaterialForm: "../components/AddMaterialForm.html",
-      MaterialRow: '../components/MaterialRow.html'
+      MaterialRow: '../components/MaterialRow.html',
+      MaterialsLoader: '../components/MaterialsLoader.html',
+      Paginator: '../components/Paginator.html'
     },
     oncreate() {
-      this.submaterials = client.service('materials').watch()
-        .find({ query: { $limit: 50, $sort: { title: 1 } } }).subscribe(materials => {
-          this.set({ materials: materials.data })
-        })
-    },
-    ondestroy() {
-      this.submaterials.unsubscribe()
+      const { page } = this.get()
+      this.store.set({ page })
     }
   };
 </script>

@@ -1,3 +1,4 @@
+{#if totalpages > 1}
 <div>
   {#if prevactive}
   <span on:click="go(-1)" class="active">&LessLess;</span>
@@ -12,6 +13,7 @@
   <span class="inactive">&GreaterGreater;</span>
   {/if}
 </div>
+{/if}
 
 <style>
   .active {
@@ -48,11 +50,12 @@
       return {
         total: 1,
         page: 1,
+        limit: 10,
         path: "",
       };
     },
     computed: {
-      totalpages: ({ total }) => Math.ceil(total / 10),
+      totalpages: ({ total, limit }) => Math.ceil(total / limit),
       prevactive: ({ page }) => page > 1,
       nextactive: ({ page, totalpages }) => page < totalpages
     },
