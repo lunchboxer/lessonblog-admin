@@ -2,16 +2,13 @@
   import client from "../utils/feathers";
   export default {
     onstate({ changed, current, previous }) {
-      if (changed.page) {
-        const { group, skip } = this.get();
-        this.sublessons = client
-          .service("lessons")
-          .watch()
-          .find({ query: { group: group._id, $limit: 10, $skip: skip, $sort: { number: -1 } } })
-          .subscribe(lessons => {
-            this.store.set({ lessons })
-          });
+      if (changed.page && previous) {
+        this.sublessons.unsubscribe()
+        this.setsub()
       }
+    },
+    oncreate() {
+      this.setsub()
     },
     data() {
       return {
@@ -29,6 +26,16 @@
         return (a, b) => {
           return b.number > a.number
         }
+      },
+      setsub() {
+        const { group, skip } = this.get();
+        this.sublessons = client
+          .service("lessons")
+          .watch()
+          .find({ query: { group: group._id, $limit: 10, $skip: skip, $sort: { number: -1 } } })
+          .subscribe(lessons => {
+            this.store.set({ lessons })
+          });
       }
     }
   };
