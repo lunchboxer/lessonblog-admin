@@ -21,6 +21,7 @@
 
   div {
     width: 100%;
+    padding: 1rem;
     text-align: center;
   }
 </style>
@@ -44,8 +45,7 @@
     methods: {
       go(page) {
         const { path } = this.get();
-        // here it's specific to lessons
-        this.store.set({ lessonPage: page, lessons: null });
+        this.store.set({ page });
         goto(path + "?page=" + page);
       }
     }

@@ -12,7 +12,7 @@ let store = new Store({
   showAddGroupForm: false,
   showCreateNewUserForm: false,
   authStatus: null,
-  lessonPage: 1
+  page: 1
 })
 
 export default store

@@ -5,9 +5,9 @@
 <h2>{groupName} class lessons</h2>
 <div class="content">
   {#if group}
-  {#if !$lessons}
-  <LessonsLoader {group} page={$lessonPage} />
-  {/if}
+
+  <LessonsLoader {group} page={$page} />
+
   {#if $showLessonSummaryForm}
   <LessonSummaryForm group={group._id} />
   {:else}
@@ -15,20 +15,20 @@
   {/if}
 
   {#if !$lessons}
-  <p>Loading lessons (page {$lessonPage})...</p>
+  <p>Loading lessons (page {$page})...</p>
   {:elseif $lessons.total === 0}
   <p>There aren't any lesson summaries for this class yet.</p>
 
   {:else}
-  <Paginator total={$lessons.total} page={$lessonPage} />
+  <Paginator total={$lessons.total} page={$page} />
   {#if !$lessons.data.length}
-  <p>There are no lessons on page {$lessonPage} of results. It looks like you went too far.</p>
+  <p>There are no lessons on page {$page} of results. It looks like you went too far.</p>
   {:else}
   {#if $lessons.data[0].group === group._id}
   {#each $lessons.data as lesson (lesson._id)}
   <LessonSummary lesson="{lesson}" showMaterials="{topLesson === lesson._id}" />
   {/each}
-  <Paginator total={$lessons.total} page={$lessonPage} />
+  <Paginator total={$lessons.total} page={$page} />
   {/if}
   {/if}
   {/if}
@@ -60,7 +60,7 @@
     },
     oncreate() {
       const { group, page } = this.get();
-      this.store.set({ lesson: null, lessonPage: page });
+      this.store.set({ lesson: null, page });
       if (group) this.store.set({ group });
     },
     computed: {
