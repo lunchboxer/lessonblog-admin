@@ -1,0 +1,53 @@
+<div>
+  {#if page > 1}
+  <span class="but" on:click="go(page - 1)">
+    &LessLess;
+  </span>
+  {/if}
+
+  <span>Page {page} of {totalpages}</span>
+
+  {#if page < totalpages} <span class="but" on:click="go(page + 1)">
+    &GreaterGreater;
+    </span>
+    {/if}
+</div>
+
+<style>
+  .but {
+    cursor: pointer;
+    padding: 1rem;
+  }
+
+  div {
+    width: 100%;
+    text-align: center;
+  }
+</style>
+
+<script>
+  import { goto } from "../../__sapper__/client.js";
+  export default {
+    oncreate() {
+      this.set({ path: this.root.options.data.path });
+    },
+    data() {
+      return {
+        total: 1,
+        page: 1,
+        path: ""
+      };
+    },
+    computed: {
+      totalpages: ({ total }) => Math.ceil(total / 10)
+    },
+    methods: {
+      go(page) {
+        const { path } = this.get();
+        // here it's specific to lessons
+        this.store.set({ lessonPage: page, lessons: null });
+        goto(path + "?page=" + page);
+      }
+    }
+  };
+</script>

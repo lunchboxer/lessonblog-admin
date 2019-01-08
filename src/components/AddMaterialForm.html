@@ -13,7 +13,7 @@
       <input id="typeField" type="text" bind:value="type" />
 
       <label for="notesField">Notes</label>
-      <input id="notesField" type="text" bind:value="notes" />
+      <textarea id="notesField" rows="10" bind:value="notes" />
 
       <br />
       <input type="submit" value="Save" class="button" ref:submit />
@@ -27,6 +27,9 @@
 <style>
   .error {
     color: red;
+  }
+  textarea {
+    height: auto;
   }
 
   .form-container {

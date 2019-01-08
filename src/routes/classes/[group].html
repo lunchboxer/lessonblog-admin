@@ -3,12 +3,11 @@
 </svelte:head>
 
 <h2>{groupName} class lessons</h2>
-
 <div class="content">
   {#if group}
-
-  <LessonsLoader {group} />
-
+  {#if !$lessons}
+  <LessonsLoader {group} page={$lessonPage} />
+  {/if}
   {#if $showLessonSummaryForm}
   <LessonSummaryForm group={group._id} />
   {:else}
@@ -16,21 +15,27 @@
   {/if}
 
   {#if !$lessons}
-  <p>Loading classes...</p>
+  <p>Loading lessons (page {$lessonPage})...</p>
   {:elseif $lessons.total === 0}
   <p>There aren't any lesson summaries for this class yet.</p>
+
+  {:else}
+  <Paginator total={$lessons.total} page={$lessonPage} />
+  {#if !$lessons.data.length}
+  <p>There are no lessons on page {$lessonPage} of results. It looks like you went too far.</p>
   {:else}
   {#if $lessons.data[0].group === group._id}
   {#each $lessons.data as lesson (lesson._id)}
   <LessonSummary lesson="{lesson}" showMaterials="{topLesson === lesson._id}" />
   {/each}
+  <Paginator total={$lessons.total} page={$lessonPage} />
+  {/if}
   {/if}
   {/if}
 
   {:elseif $groups && $groups.length}
   <p>Could not find "{groupName} class".</p>
   {/if}
-
 </div>
 
 <script>
@@ -39,20 +44,23 @@
     components: {
       LessonSummary: "../../components/LessonSummary.html",
       LessonsLoader: "../../components/LessonsLoader.html",
-      LessonSummaryForm: "../../components/LessonSummaryForm.html"
+      LessonSummaryForm: "../../components/LessonSummaryForm.html",
+      Paginator: "../../components/Paginator.html"
     },
     data() {
       return {
-        error: null
+        error: null,
+        page: 1
       };
     },
     preload({ params, query }) {
       const { group } = params;
-      return { groupName: group };
+      const page = query.page || 1
+      return { groupName: group, page };
     },
     oncreate() {
-      this.store.set({ lesson: null });
-      const { group } = this.get();
+      const { group, page } = this.get();
+      this.store.set({ lesson: null, lessonPage: page });
       if (group) this.store.set({ group });
     },
     computed: {
@@ -60,8 +68,10 @@
         if ($groups) return $groups.find(group => group.name === groupName)
       },
       topLesson: ({ $lessons }) => {
-        if ($lessons && $lessons.total > 0) return $lessons.data[0]._id;
-      }
+        if ($lessons && $lessons.total > 0 && $lessons.data.length > 0) return $lessons.data[0]._id;
+      },
+      start: ({ page }) => ((page - 1) * 10) + 1,
+      finish: ({ page }) => page * 10
     }
   };
 </script>

@@ -1,5 +1,5 @@
-<a href="/material/{material._id}">
-  <li class="matlistitem">
+<li class="matlistitem">
+  <a href="/material/{material._id}">
     {#if simpletype === 'video'}
     <i class="material-icons">live_tv</i>
     {:elseif simpletype === 'image'}
@@ -11,8 +11,8 @@
     {/if}
 
     <span>{material.title}</span>
-  </li>
-</a>
+  </a>
+</li>
 
 
 <style>

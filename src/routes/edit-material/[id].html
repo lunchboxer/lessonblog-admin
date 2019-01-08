@@ -12,7 +12,7 @@
     <input id="typeField" type="text" bind:value="material.type" />
 
     <label for="notesField">Notes</label>
-    <input id="notesField" type="text" bind:value="material.notes" />
+    <textarea rows="12" id="notesField" bind:value="material.notes" />
 
     <br />
     <input type="submit" value="Save" class="button" ref:submit />
@@ -30,7 +30,9 @@
   .error {
     color: red;
   }
-
+  textarea {
+    height: auto;
+  }
   form,
   fieldset {
     padding: 0;

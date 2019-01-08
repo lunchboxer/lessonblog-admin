@@ -2,15 +2,29 @@
 {#await materials}
 <p>Loading materials...</p>
 {:then answer}
-{#each answer.images as image (image._id)}
-<MaterialsThumb {image} size=100 />
+{#if answer.images.length}
+<div class="images">
+  {#each answer.images as image (image._id)}
+  <MaterialsThumb {image} size=120 />
+  {/each}
+</div>
+{/if}
+{#each answer.audio as material (material._id)}
+<MaterialCard {material} />
 {/each}
-{#each answer.others as material (material._id)}
+{#each answer.video as material (material._id)}
 <MaterialCard {material} />
 {/each}
 {:catch}
 <p>Loading materials failed.</p>
 {/await}
+
+<style>
+  .images {
+    display: flex;
+    margin-bottom: 2rem;
+  }
+</style>
 
 <script>
   import client from '../utils/feathers.js'
@@ -22,10 +36,12 @@
     computed: {
       materials: async ({ lesson }) => {
         if (lesson.materials.length) {
-          const res = await client.service("materials").find({ query: { _id: { $in: lesson.materials } } }).catch(error => console.log(error))
+          const res = await client.service("materials").find({ query: { $limit: 20, _id: { $in: lesson.materials } } }).catch(error => console.log(error))
           const images = res.data.filter(thing => thing.type.split('/')[0] === 'image')
-          const others = res.data.filter(thing => thing.type.split('/')[0] !== 'image')
-          return { images, others }
+          const audio = res.data.filter(thing => thing.type.split('/')[0] === 'audio')
+          const video = res.data.filter(thing => thing.type.split('/')[0] === 'video')
+          // add others catchall
+          return { images, audio, video }
         }
       }
     }

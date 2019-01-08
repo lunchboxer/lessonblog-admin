@@ -34,7 +34,7 @@
     },
     oncreate() {
       this.submaterials = client.service('materials').watch()
-        .find().subscribe(materials => {
+        .find({ query: { $limit: 50, $sort: { title: 1 } } }).subscribe(materials => {
           this.set({ materials: materials.data })
         })
     },

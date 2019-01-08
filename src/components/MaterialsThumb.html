@@ -2,16 +2,19 @@
   <a href="{image.uri}">
     <img src="{thumbURI}" alt="{image.title}" />
   </a>
+  <br>
+  <span>{image.title}</span>
 </div>
 
 <style>
-  div {
-    height: var(--size);
-    width: var(--size);
+  span {
+    font-size: 1.2rem;
   }
 
-  img {
-    margin-right: 0.5rem;
+  div {
+    width: var(--size);
+    text-align: center;
+    margin: 0.5rem;
   }
 </style>
 

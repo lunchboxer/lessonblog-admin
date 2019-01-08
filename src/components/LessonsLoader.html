@@ -2,15 +2,25 @@
   import client from "../utils/feathers";
   export default {
     oncreate() {
-      const { group } = this.get();
+      const { group, skip } = this.get();
       this.sublessons = client
         .service("lessons")
         .watch()
-        .find({ query: { group: group._id, $sort: { number: -1 } } })
-        .subscribe(lessons => this.store.set({ lessons }));
+        .find({ query: { group: group._id, $limit: 10, $skip: skip, $sort: { number: -1 } } })
+        .subscribe(lessons => {
+          this.store.set({ lessons })
+        });
+    },
+    data() {
+      return {
+        page: 1
+      }
     },
     ondestroy() {
-      this.sublessons.unsubscribe
+      this.sublessons.unsubscribe()
+    },
+    computed: {
+      skip: ({ page }) => (page - 1) * 10
     },
     methods: {
       sorter() {

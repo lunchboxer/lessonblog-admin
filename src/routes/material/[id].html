@@ -3,7 +3,7 @@
 <p>Title: {material.title}</p>
 <p class="truncate">URL:<a href="{material.uri}">{material.uri}</a></p>
 {#if material.notes}
-<p>Notes: {material.notes}</p>
+<p>Notes: {@html notes}</p>
 {/if}
 
 <div class="media">
@@ -61,6 +61,7 @@
 </style>
 
 <script>
+  import marked from 'marked'
   import client from '../../utils/feathers'
   export default {
     preload({ params, query }) {
@@ -95,7 +96,14 @@
       simpletype: ({ material }) => {
         if (!material || !material.type) return "";
         return material.type.split("/")[0];
+      },
+      notes: ({ material }) => {
+        if (!material || !material.notes) return ""
+        return marked(material.notes, { breaks: true })
       }
+    },
+    methods: {
+      marked
     },
     helpers: {
       group: (lesson, groups) => {

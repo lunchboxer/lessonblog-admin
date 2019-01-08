@@ -1,7 +1,7 @@
 <div class="lesson-summary">
   <div class="toprow">
     <a href="/lessons/{lesson._id}">
-      <h3>Lesson {lesson.number} - {lesson.title}</h3>
+      <h3>{lesson.number} - {lesson.title}</h3>
     </a>
     <div class="buttons">
       <LessonPublishToggle {lesson} />
@@ -12,7 +12,6 @@
   </div>
   <p>{date}</p>
 
-
   {@html summary_EN}
 
   {#if summary_ZH}
@@ -20,8 +19,6 @@
   {:else}
   <p class="error">This lesson isn't translated into Chinese.</p>
   {/if}
-
-
 
   {#if lesson.materials.length > 0}
   {#if !showMaterials}
@@ -42,7 +39,7 @@
   }
 
   .buttons i {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     cursor: pointer;
   }
 
@@ -56,7 +53,8 @@
   .lesson-summary {
     margin: 1rem 0;
     padding: 1rem 0;
-    border-top: 1px solid var(--base-color);
+    border-bottom: 1px solid #333333;
+    border-top: 1px solid #333333;
     width: 100%;
   }
 

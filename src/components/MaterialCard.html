@@ -1,27 +1,22 @@
-<a href="{material.uri}">
-  <div>
-    {#if simpletype === 'image'}
-    <img src="{thumbURI}" alt="{material.title}" />
+<div>
+  <i class="material-icons">
+    {#if simpletype === 'video'}
+    live_tv
+    {:elseif simpletype === 'audio'}
+    audiotrack
     {:else}
-    <i class="material-icons">
-      {#if simpletype === 'video'}
-      live_tv
-      {:elseif simpletype === 'audio'}
-      audiotrack
-      {:else}
-      attachment
-      {/if}
-    </i>
+    attachment
     {/if}
+  </i>
+  <a href="/material/{material._id}">
     <span>{material.title}</span>
-  </div>
-</a>
+  </a>
+</div>
 
 <style>
   div {
     display: flex;
     align-items: center;
-    text-align: center;
     padding: .5rem;
     margin: .5rem;
   }
@@ -30,13 +25,8 @@
     font-size: 1em;
   }
 
-  img {
-    margin-right: 0.5rem;
-    border: 1px solid grey;
-  }
-
   i {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-right: 0.5rem;
   }
 </style>
