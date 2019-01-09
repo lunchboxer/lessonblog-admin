@@ -35,6 +35,11 @@
         error: null
       }
     },
+    onstate({ changed, current, previous }) {
+      if (changed.path) {
+        this.store.set({ path: current.path })
+      }
+    },
     components: {
       GroupsLoader: "../components/GroupsLoader.html",
       Header: "../components/Header.html",

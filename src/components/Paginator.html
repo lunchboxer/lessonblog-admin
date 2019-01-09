@@ -43,15 +43,11 @@
 <script>
   import { goto } from "../../__sapper__/client.js";
   export default {
-    oncreate() {
-      this.set({ path: this.root.options.data.path });
-    },
     data() {
       return {
         total: 1,
         page: 1,
         limit: 10,
-        path: "",
       };
     },
     computed: {
@@ -61,7 +57,8 @@
     },
     methods: {
       go(x) {
-        const { path, page } = this.get();
+        const { page } = this.get();
+        const { path } = this.store.get();
         const newpage = +page + x
         this.store.set({ page: newpage });
         goto(path + "?page=" + newpage);
